@@ -140,3 +140,153 @@ Copybody {
   margin-left: 5px;
   color: black;
 }
+
+Copybody { 
+    font-family: poppins, sans-serif; 
+}
+
+.custom-bar {
+    background: linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,0,255,1) 100%);
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap:4%;
+}
+
+  
+.circle-chart {   
+    width: 100%;
+    max-width: 150px;
+    margin: 0 auto;
+  }
+  
+  .circle-chart canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+.chart-item {
+    text-align: center;
+    padding: 4%;
+    background: linear-gradient(to top, #1F2937, transparent);
+    border-radius: 0.5rem;
+    color: white !important;
+}
+
+
+.chart-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: linear-gradient(to top, #1F2937, transparent);
+    border-radius: 0.5rem;
+    color: white !important;
+}
+
+.circle-chart {
+    width: 100%;
+    max-width: 150px;
+    margin: 0 auto;
+  }
+
+  .circle-chart canvas {
+    margin-left: -10%;
+    width: 120% !important;
+    height: auto !important;
+  }
+
+  @media (max-width: 640px) {
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .p-5 {
+      padding: 1rem;
+    }
+  }
+
+#totalClients {
+    border: none; /* Ensure there's no border */
+    background-color: transparent; /* Optional: Make sure there's no background */
+}
+
+.custom-center {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+.apexcharts-datalabel-label,
+.apexcharts-text,
+.apexcharts-legend-text,
+.apexcharts-pie-label {
+    color: white !important;
+}
+
+.custom_size{
+ margin-top: -3px;
+
+}
+
+
+
+.custom-size{
+    margin-top: -7px;
+    padding-bottom: 9px;
+    
+}
+
+.w-40 {
+    margin-top: -40px;
+    margin-left: -30px;
+    width: 10rem;
+}
+
+.text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    margin-top: -15px;
+}
+#weekClients {
+    border: none !important; /* Remove any border */
+    background-color: transparent !important; /* Ensure no background color */
+}
+
+.remove_border{
+    border: none !important;
+    border:0 px !important;
+}
+/* Custom styling for the modal */
+#searchModal .modal-content {
+  max-width: 500px;
+  margin: auto;
+}
+
+#searchModal .flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#searchModal .flex-wrap div {
+  flex: 1 1 45%; /* Adjust the width of each checkbox container */
+}
+
+#searchModal label {
+  margin-left: 5px;
+  color: black;
+}
+
+
+/* Set default text color to black for the modal */
+#advancedSearchModal * {
+  color: black !important; /* Ensure all text inside the modal is black */
+}
+
