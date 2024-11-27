@@ -420,29 +420,28 @@ app.post('/syndicate-login', async (req, res) => {
 
 
 // Syndicate Route - Register Syndicate Client
-router.post('/api/syndicateclients/register', authenticateToken, upload.single('faceImage'), async (req, res) => {
+router.post('/api/syndicateclients/register', authenticateToken, faceImageUpload, async (req, res) => {
   try {
     const { name, phone, email, companyName, personToMeet, domain } = req.body;
-    const personReferred = req.user ? req.user.syndicate_name : req.body.personReferred; // Use syndicate_name from token if available, otherwise from form data
+    const personReferred = req.user ? req.user.syndicate_name : req.body.personReferred;
 
-    // Validate required fields: name and phone
+    // Validate required fields
     if (!name || !phone) {
       return res.status(400).json({ error: 'Name and Phone are required.' });
     }
 
-    // Check if a client with the same email or phone already exists
+    // Check for existing client by email or phone
     const existingClientByEmail = await Client.findOne({ email });
     const existingClientByPhone = await Client.findOne({ phone });
 
     if (existingClientByEmail) {
       return res.status(400).json({ error: 'Email already exists.' });
     }
-
     if (existingClientByPhone) {
       return res.status(400).json({ error: 'Phone number already exists.' });
     }
 
-    // Create a new client document with the personReferred
+    // Create a new client object
     const client = new Client({
       name,
       phone,
@@ -451,18 +450,43 @@ router.post('/api/syndicateclients/register', authenticateToken, upload.single('
       personToMeet,
       domain,
       personReferred,
-      faceImage: req.file ? req.file.id : null,
     });
 
-    await client.save();
+    if (req.file) {
+      // Save the image to GridFS using faceImagesBucket
+      const filename = `${crypto.randomBytes(16).toString('hex')}${path.extname(req.file.originalname)}`;
+      const uploadStream = faceImagesBucket.openUploadStream(filename);
 
-    // Send the welcome email with QR code after successful registration
-    await generateAndSendQRCode(client, true);
+      uploadStream.end(req.file.buffer);
 
-    res.status(201).json({ message: 'Syndicate client registered successfully.' });
+      uploadStream.on('finish', async () => {
+        client.faceImage = uploadStream.id; // Save GridFS file ID in database
+
+        // Save client to the database
+        await client.save();
+
+        // Generate and send QR code
+        await generateAndSendQRCode(client, true);
+
+        res.status(201).json({ message: 'Syndicate client registered successfully.' });
+      });
+
+      uploadStream.on('error', (error) => {
+        console.error('Error uploading faceImage:', error);
+        res.status(500).json({ error: 'Error uploading faceImage.' });
+      });
+    } else {
+      // Save client without a faceImage
+      await client.save();
+
+      // Generate and send QR code
+      await generateAndSendQRCode(client, true);
+
+      res.status(201).json({ message: 'Syndicate client registered successfully.' });
+    }
   } catch (error) {
     console.error('Error registering syndicate client:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error.' });
   }
 });
 
@@ -1723,8 +1747,13 @@ app.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, res
 
 
 app.get('/api/client/public/:id', async (req, res) => {
+  console.log('Received client_id:', req.params.id);
   try {
-      const client = await Client.findById(req.params.id, 'name phone email companyName');
+      let client = await Client.findById(req.params.id, 'name phone email companyName');
+      if (!client) {
+          client = await SyndicateClient.findById(req.params.id, 'name phone email companyName');
+      }
+
       if (client) {
           res.status(200).json({ success: true, client });
       } else {
@@ -1735,7 +1764,6 @@ app.get('/api/client/public/:id', async (req, res) => {
       res.status(500).json({ success: false, message: 'Server error' });
   }
 });
-
 
 
 
@@ -1855,23 +1883,29 @@ cron.schedule('0 18 * * *', async () => {
   }
 });
 
-
-
-
+//visitor history
 router.get('/api/visit-history', async (req, res) => {
   try {
+    console.log('Fetching all visits...');
+
     // Fetch all visits
     const visits = await Visit.find().sort({ checkInTime: -1 });
+    console.log('Visits found:', visits.length);
 
-    // Fetch client data based on collectionType
+    // Populate client data for each visit
     const populatedVisits = await Promise.all(
       visits.map(async (visit) => {
-        if (visit.collectionType === 'Client') {
+        try {
+          // Fetch client data from the Client collection
           const client = await Client.findById(visit.clientId);
+          if (!client) {
+            console.warn('No client found for visit:', visit._id);
+            return { ...visit.toObject(), clientId: null }; // Gracefully handle missing clients
+          }
           return { ...visit.toObject(), clientId: client };
-        } else if (visit.collectionType === 'SyndicateClient') {
-          const client = await SyndicateClient.findById(visit.clientId);
-          return { ...visit.toObject(), clientId: client };
+        } catch (err) {
+          console.error('Error populating client data for visit:', visit._id, err);
+          return { ...visit.toObject(), clientId: null }; // Handle errors gracefully
         }
       })
     );
@@ -1882,6 +1916,7 @@ router.get('/api/visit-history', async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch visit history.' });
   }
 });
+
 
 // bangalore_event
 

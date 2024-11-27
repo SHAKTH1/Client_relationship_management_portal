@@ -108,6 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     clients.forEach((client) => {
       const profileImage = client.faceImage ? `/images/${client.faceImage}` : 'https://via.placeholder.com/80';
+      console.log('Client faceImage:', client.faceImage, 'Profile Image Path:', profileImage); // Debug log
+
       const row = `
       <tr>
         <td class="py-2 px-4">
