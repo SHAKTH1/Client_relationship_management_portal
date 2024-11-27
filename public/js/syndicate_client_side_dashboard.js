@@ -144,9 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </select>
 
           </td>
-          <td class="py-2 px-4">
-            <button class="bg-green-500 px-2 py-1 rounded" onclick="handleSavePriority('${client._id}')">Save</button>
-          </td>
+         
         </tr>
         `;
         tableBody.insertAdjacentHTML('beforeend', row);
