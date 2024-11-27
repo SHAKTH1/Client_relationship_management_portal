@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+addocument.addEventListener('DOMContentLoaded', () => {
     const PAGE_SIZE = 10;
     let currentPage = 1;    
     let totalPages = 1;
@@ -517,6 +517,10 @@ document.getElementById('profileButton').addEventListener('click', function() {
     var dropdown = document.getElementById('profileDropdown');
     dropdown.classList.toggle('hidden');
 });
+
+
+
+
 
 document.addEventListener('click', function(event) {
     var isClickInsideNotification = document.getElementById('notificationButton').contains(event.target);
