@@ -95,61 +95,197 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
 
-  // Populate the client table with data
+  
+  // Populate the client table with data and include serial number column
   function populateTable(clients) {
     const tableBody = document.getElementById('client-table-body');
     tableBody.innerHTML = '';
 
     // Ensure `clients` is an array before attempting to loop
     if (!Array.isArray(clients)) {
-      console.error('Expected clients to be an array, but got:', clients);
-      return;
+        console.error('Expected clients to be an array, but got:', clients);
+        return;
     }
 
-    clients.forEach((client) => {
-      const profileImage = client.faceImage ? `/images/${client.faceImage}` : 'https://via.placeholder.com/80';
-      const row = `
-      <tr>
-        <td class="py-2 px-4">
-          <img id="profile-img" src="${profileImage}" alt="Profile" class="profile-img cursor-pointer" style="width: 50px; height: 50px; border-radius: 50%;" onclick="openImagePopup('${profileImage}')">
-        </td>
-        <td class="py-2 px-4">${client.name || 'N/A'}</td>
-        <td class="py-2 px-4">${client.domain || 'N/A'}</td>
-        <td class="py-2 px-4">${new Date(client.createdAt).toLocaleString()}</td>
-        <td class="py-2 px-4">
-          <div class="relative inline-block text-left">
-            <button onclick="toggleDropdown('${client._id}', event)" class="bg-blue-500 px-2 py-1 rounded">Actions</button>
-            <div id="dropdown-${client._id}" class="dropdown-content hidden bg-white text-black absolute z-10">
-              <a href="#" onclick="handleViewClient('${client._id}')">View</a>
-              <a href="#" onclick="handleEditClient('${client._id}')">Edit</a>
-              <a href="#" onclick="handleDeleteClient('${client._id}')">Delete</a>
+    clients.forEach((client, index) => {
+        const profileImage = client.faceImage ? `/images/${client.faceImage}` : 'https://via.placeholder.com/80';
+        const row = `
+        <tr>
+          <td class="py-2 px-4">${index + 1}</td> <!-- Serial number -->
+          <td class="py-2 px-4">
+            <img id="profile-img" src="${profileImage}" alt="Profile" class="profile-img cursor-pointer" style="width: 50px; height: 50px; border-radius: 50%;" onclick="openImagePopup('${profileImage}')">
+          </td>
+          <td class="py-2 px-4">${client.name || 'N/A'}</td>
+          <td class="py-2 px-4">${client.domain || 'N/A'}</td>
+          <td class="py-2 px-4">
+            <div class="relative inline-block text-left">
+              <button onclick="toggleDropdown('${client._id}', event)" class="bg-blue-500 px-2 py-1 rounded">Actions</button>
+              <div id="dropdown-${client._id}" class="dropdown-content hidden bg-white text-black absolute z-10">
+                <a href="#" onclick="handleViewClient('${client._id}')">View</a>
+                <a href="#" onclick="handleEditClient('${client._id}')">Edit</a>
+                <a href="#" onclick="handleDeleteClient('${client._id}')">Delete</a>
+              </div>
             </div>
-          </div>
-        </td>
-        <td class="py-2 px-4">
-          <button onclick="handleAddDetailsClick(event, '${client._id}')" class="bg-green-500 px-2 py-1 rounded">Add</button>
-        </td>
-        <td class="py-2 px-4">
-          <button href="./mom.html" onclick="handleAddDetailsClick1(event, '${client._id}')" class="bg-green-500 px-2 py-1 rounded">Log</button>
-        </td>
-        <td class="py-2 px-4">
-          <button href="./schedule_meeting.html" onclick="handleAddDetailsClick2(event, '${client._id}')" class="bg-green-500 px-2 py-1 rounded">Schedule</button>
-        </td>
-        <td class="py-2 px-4">
-          <select id="priority-${client._id}" class="priority-select" onchange="updatePriorityColor('${client._id}')">
-            <option value="low" ${client.priority === 'low' ? 'selected' : ''}>Low</option>
-            <option value="medium" ${client.priority === 'medium' ? 'selected' : ''}>Medium</option>
-            <option value="high" ${client.priority === 'high' ? 'selected' : ''}>High</option>
-          </select>
-        </td>
-        <td class="py-2 px-4">
-          <button class="bg-green-500 px-2 py-1 rounded" onclick="handleSavePriority('${client._id}')">Save</button>
-        </td>
-      </tr>
-      `;
-      tableBody.insertAdjacentHTML('beforeend', row);
+          </td>
+          <td class="py-2 px-4">
+            <button onclick="handleAddDetailsClick(event, '${client._id}')" class="bg-green-500 px-2 py-1 rounded">Add</button>
+          </td>
+          <td class="py-2 px-4">
+            <button href="./mom.html" onclick="handleAddDetailsClick1(event, '${client._id}')" class="bg-green-500 px-2 py-1 rounded">Log</button>
+          </td>
+          <td class="py-2 px-4">
+            <button href="./schedule_meeting.html" onclick="handleAddDetailsClick2(event, '${client._id}')" class="bg-green-500 px-2 py-1 rounded">Schedule</button>
+          </td>
+          <td class="py-2 px-4">
+            <select id="priority-${client._id}" class="priority-select" onchange="handleDropdownChange('${client._id}', this.value)">
+    <option value="" disabled selected>Select Action</option>
+    <option value="set-priority">Set Priority</option>
+    <option value="set-client-status">Set Client Status</option>
+</select>
+
+          </td>
+          <td class="py-2 px-4">
+            <button class="bg-green-500 px-2 py-1 rounded" onclick="handleSavePriority('${client._id}')">Save</button>
+          </td>
+        </tr>
+        `;
+        tableBody.insertAdjacentHTML('beforeend', row);
     });
+}
+
+
+// dropdown change
+
+window.handleDropdownChange = function(clientId, selectedValue) {
+  console.log("Dropdown change triggered", { clientId, selectedValue });
+
+  if (selectedValue === 'set-priority') {
+      openModal('set-priority-modal', clientId);
+  } else if (selectedValue === 'set-client-status') {
+      openModal('set-client-status-modal', clientId);
+  } else {
+      console.error('Unexpected value selected:', selectedValue);
   }
+
+  // Reset dropdown value to default after selection
+  const dropdown = document.getElementById(`priority-${clientId}`);
+  if (dropdown) dropdown.value = '';
+};
+
+
+
+
+
+
+// Store last updated values for clients
+// Store last updated values for each client and modal
+const lastUpdated = {};
+
+// Open a modal and set the "Last Updated" text
+window.openModal = function (modalId, clientId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('hidden'); // Show modal
+    modal.dataset.clientId = clientId; // Store clientId for further use
+
+    // Fetch the last updated value for this modal and client
+    const key = `${modalId}-${clientId}`; // Unique key per modal and client
+    const lastUpdate = lastUpdated[key] || 'Not Set'; // Default to "Not Set"
+
+    // Update the "Last Updated" text
+    const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
+    if (lastUpdatedElement) {
+      lastUpdatedElement.textContent = lastUpdate;
+    }
+
+    // Reset the dropdown to default value
+    const dropdown = modal.querySelector('select');
+    if (dropdown) dropdown.value = '';
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+};
+
+// Close a modal
+window.closeModal = function (modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('hidden'); // Hide modal
+    console.log(`Modal "${modalId}" closed.`);
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+};
+
+// Save Priority
+window.savePriority = function () {
+  const modal = document.getElementById('set-priority-modal');
+  if (!modal) {
+    console.error('Priority modal not found.');
+    return;
+  }
+
+  const clientId = modal.dataset.clientId;
+  const priority = document.getElementById('priority-level').value;
+
+  if (!priority) {
+    alert('Please select a priority level.');
+    return;
+  }
+
+  // Save the last selected priority for this client and modal
+  const key = `set-priority-modal-${clientId}`;
+  lastUpdated[key] = priority;
+
+  console.log(`Priority "${priority}" set for Client ID: ${clientId}`);
+
+  // Reflect the updated priority in the "Last Updated" section
+  const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
+  if (lastUpdatedElement) {
+    lastUpdatedElement.textContent = priority;
+  }
+
+  window.closeModal('set-priority-modal');
+};
+
+// Save Client Status
+window.saveClientStatus = function () {
+  const modal = document.getElementById('set-client-status-modal');
+  if (!modal) {
+    console.error('Client Status modal not found.');
+    return;
+  }
+
+  const clientId = modal.dataset.clientId;
+  const status = document.getElementById('client-status').value;
+
+  if (!status) {
+    alert('Please select a client status.');
+    return;
+  }
+
+  // Save the last selected status for this client and modal
+  const key = `set-client-status-modal-${clientId}`;
+  lastUpdated[key] = status;
+
+  console.log(`Client Status "${status}" set for Client ID: ${clientId}`);
+
+  // Reflect the updated status in the "Last Updated" section
+  const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
+  if (lastUpdatedElement) {
+    lastUpdatedElement.textContent = status;
+  }
+
+  window.closeModal('set-client-status-modal');
+};
+
+
+
+
+
+
+
+
 
   function renderPagination() {
     const paginationContainer = document.getElementById('pagination');
@@ -430,20 +566,20 @@ document.getElementById('close-btn').addEventListener('click', hideClientDetails
         window.location.href = './schedule_meeting.html'; // Redirect to the schedule meeting page
     };
 
-    // Function to update the priority color dynamically
-    window.updatePriorityColor = function (clientId) {
-        const selectElement = document.getElementById(`priority-${clientId}`);
-        const selectedPriority = selectElement.value;
+    // // Function to update the priority color dynamically
+    // window.updatePriorityColor = function (clientId) {
+    //     const selectElement = document.getElementById(`priority-${clientId}`);
+    //     const selectedPriority = selectElement.value;
 
-        // Update background color based on selected priority
-        if (selectedPriority === 'high') {
-            selectElement.style.backgroundColor = '#FF6347'; // Red for high priority
-        } else if (selectedPriority === 'medium') {
-            selectElement.style.backgroundColor = '#FFD700'; // Yellow for medium priority
-        } else {
-            selectElement.style.backgroundColor = '#90EE90'; // Green for low priority
-        }
-    };
+    //     // Update background color based on selected priority
+    //     if (selectedPriority === 'high') {
+    //         selectElement.style.backgroundColor = '#FF6347'; // Red for high priority
+    //     } else if (selectedPriority === 'medium') {
+    //         selectElement.style.backgroundColor = '#FFD700'; // Yellow for medium priority
+    //     } else {
+    //         selectElement.style.backgroundColor = '#90EE90'; // Green for low priority
+    //     }
+    // };
 
     // Function to handle saving the updated priority
     window.handleSavePriority = async function (clientId) {
