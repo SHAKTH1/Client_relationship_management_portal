@@ -408,76 +408,7 @@
     </div>
     
     </div>
-  
-  
-    <script>
-        function redirectToVisitorForm() {
-            // Assuming the form is on a page named `syndicate_visitor_form.html`
-            window.location.href = './syndicate_client_side_visitorform.html';
-        }
-        
-        let timeoutID;
-
-        // Session timeout duration (1 hour = 3600 seconds)
-        const sessionTimeout = 3600 * 1000; // 1 hour in milliseconds
-
-        function resetTimer() {
-            clearTimeout(timeoutID);
-            timeoutID = setTimeout(logoutUser, sessionTimeout);
-        }
-
-        function logoutUser() {
-            alert("Session expired due to inactivity. Logging out.");
-            localStorage.clear();
-            window.location.href = "index.html"; 
-        }
-
-        // Listen for user activity to reset the timer
-        window.onload = resetTimer;
-        document.onmousemove = resetTimer;
-        document.onkeydown = resetTimer;
-        document.ontouchstart = resetTimer;
-
-      
-
-       document.getElementById('logout-btn').addEventListener('click', function() 
-       {
-       // Clear session or token (depending on how session is stored, e.g., localStorage or cookies)
-       localStorage.clear(); // Example if you use localStorage
-       alert("You have been logged out.");
-       window.location.href = "index.html"; // Redirect to login page or any desired location
-
-       });
-
-        document.getElementById('notification-btn').addEventListener('click', function() {
-        const popup = document.getElementById('notification-popup');
-        if (popup.style.display === 'none') {
-            popup.style.display = 'block';
-        } else {
-            popup.style.display = 'none';
-        }
-        });
-
-        document.getElementById("settingsButton").addEventListener("click", function() {
-        var logoutButton = document.getElementById("logoutButton");
-        
-        // Toggle visibility of logout button
-        if (logoutButton.style.display === "none") {
-            logoutButton.style.display = "block";
-        } else {
-            logoutButton.style.display = "none";
-        }
-        });
-
-       
-
-    </script>
-   
-  
-    <script  type="module" src="./js/syndicate_client_side_dashboard.js"></script>
-    <script  type="module" src="./js/session_timeout.js"></script>
-
- <!-- Set Priority Modal -->
+   <!-- Set Priority Modal -->
  <div id="set-priority-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[50%] h-[50%]">
       <!-- Title Box -->
@@ -547,6 +478,75 @@
   
   
   
+  
+    <script>
+        function redirectToVisitorForm() {
+            // Assuming the form is on a page named `syndicate_visitor_form.html`
+            window.location.href = './syndicate_client_side_visitorform.html';
+        }
+        
+        let timeoutID;
+
+        // Session timeout duration (1 hour = 3600 seconds)
+        const sessionTimeout = 3600 * 1000; // 1 hour in milliseconds
+
+        function resetTimer() {
+            clearTimeout(timeoutID);
+            timeoutID = setTimeout(logoutUser, sessionTimeout);
+        }
+
+        function logoutUser() {
+            alert("Session expired due to inactivity. Logging out.");
+            localStorage.clear();
+            window.location.href = "index.html"; 
+        }
+
+        // Listen for user activity to reset the timer
+        window.onload = resetTimer;
+        document.onmousemove = resetTimer;
+        document.onkeydown = resetTimer;
+        document.ontouchstart = resetTimer;
+
+      
+
+       document.getElementById('logout-btn').addEventListener('click', function() 
+       {
+       // Clear session or token (depending on how session is stored, e.g., localStorage or cookies)
+       localStorage.clear(); // Example if you use localStorage
+       alert("You have been logged out.");
+       window.location.href = "index.html"; // Redirect to login page or any desired location
+
+       });
+
+        document.getElementById('notification-btn').addEventListener('click', function() {
+        const popup = document.getElementById('notification-popup');
+        if (popup.style.display === 'none') {
+            popup.style.display = 'block';
+        } else {
+            popup.style.display = 'none';
+        }
+        });
+
+        document.getElementById("settingsButton").addEventListener("click", function() {
+        var logoutButton = document.getElementById("logoutButton");
+        
+        // Toggle visibility of logout button
+        if (logoutButton.style.display === "none") {
+            logoutButton.style.display = "block";
+        } else {
+            logoutButton.style.display = "none";
+        }
+        });
+
+       
+
+    </script>
+   
+  
+    <script  type="module" src="./js/syndicate_client_side_dashboard.js"></script>
+    <script  type="module" src="./js/session_timeout.js"></script>
+
+
   
   
 
