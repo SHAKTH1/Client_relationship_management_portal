@@ -8,25 +8,52 @@
    
     <style>
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 600px;
-        }
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    text-align: center;
+}
+.modal {
+    z-index: 9999; /* Ensure modal is above other elements */
+}
+
+
+.hidden {
+    display: none;
+}
+
+.priority-select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 2px solid #ccc;
+    background-color: #f7f7f7;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    width: 100%;
+    transition: border-color 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.priority-select option:disabled {
+    color: gray;
+    font-style: italic;
+}
+
         div#client-details-section {
             margin-left: -37%;
         }
@@ -108,9 +135,9 @@
         }
 
         /* Styling for the priority select dropdown */
-.priority-select {
-    padding: 8px;
-    border-radius: 6px;
+        /* .priority-select {
+    padding: 6px; Reduced padding from 8px to 6px */
+    /* border-radius: 6px;
     border: 2px solid #ccc;
     background-color: #f7f7f7;
     font-size: 14px;
@@ -119,38 +146,38 @@
     width: 100%;
     transition: border-color 0.3s ease;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
+} */
 
 /* Change border color on focus */
-.priority-select:focus {
+/* .priority-select:focus {
     border-color: #888;
     outline: none;
-}
+} */
 
 /* Priority select dropdown options */
-.priority-select option {
+/* .priority-select option {
     font-size: 14px;
-    padding: 10px;
-}
+    padding: 8px;
+} */
 
         /* Style based on priority selected */
         /* Low Priority (Green) */
-        .low-priority {
+        /* .low-priority {
             background-color: #28a745;
             color: white;
-        }
+        } */
 
         /* Medium Priority (Yellow) */
-        .medium-priority {
+        /* .medium-priority {
             background-color: #ffc107;
             color: black;
-        }
+        } */
 
         /* High Priority (Red) */
-        .high-priority {
+        /* .high-priority {
             background-color: #dc3545;
             color: white;
-        }
+        } */
 
         /* Additional button styling for Save button */
         button {
@@ -271,19 +298,19 @@
                 <table class="min-w-full bg-gray-700 text-white rounded-lg">
                     <thead class="bg-gray-800">
                         <tr>
+                            <th class="text-left py-2 px-4">Sl No</th>
                             <th class="text-left py-2 px-4">Photo</th>
                             <th class="text-left py-2 px-4">Client Name</th>
                             <th class="text-left py-2 px-4">Domain</th>
-                            <th class="text-left py-2 px-4">Date and Time</th>
                             <th class="text-left py-2 px-4">Actions</th>
                             <th class="text-left py-2 px-4">Details</th>
                             <th class="text-left py-2 px-4">MoM</th>
                             <th class="text-left py-2 px-4">Meeting</th>
-                            <th class="text-left py-2 px-4">Prority</th>
-                            <th class="text-left py-2 px-4">Update</th>
-
+                            <th class="text-left py-2 px-4">Priority</th>
+                            <!-- <th class="text-left py-2 px-4">Update</th> -->
                         </tr>
                     </thead>
+                    
                     <tbody id="client-table-body">
                         <!-- Rows will be dynamically inserted here by JavaScript -->
                     </tbody>
@@ -449,5 +476,85 @@
   
     <script  type="module" src="./js/syndicate_client_side_dashboard.js"></script>
     <script  type="module" src="./js/session_timeout.js"></script>
+
+ <!-- Set Priority Modal -->
+ <div id="set-priority-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[50%] h-[50%]">
+      <!-- Title Box -->
+      <div class="modal-header bg-gray-700 p-4 rounded-t-lg">
+        <h2 class="text-2xl font-bold text-center">Set Priority</h2>
+      </div>
+  
+      <!-- Last Updated Text -->
+      <div class="text-center mt-4 last-updated">
+        <p class="text-lg font-bold">
+          <span class="text-white">Last Updated:</span>
+          <span class="text-green-500">Not Set</span>
+        </p>
+      </div>
+  
+      <!-- Dropdown -->
+      <select id="priority-level" class="w-full mt-6 mb-8 border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-lg">
+        <option value="" disabled selected>Select</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+  
+      <!-- Buttons -->
+      <div class="flex justify-end space-x-6 mt-6">
+        <button type="button" onclick="savePriority()" class="bg-green-500 px-6 py-2 rounded text-white text-lg">Save</button>
+        <button type="button" onclick="closeModal('set-priority-modal')" class="bg-red-500 px-6 py-2 rounded text-white text-lg">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+
+<!-- Set Client Status Modal -->
+<div id="set-client-status-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[50%] h-[50%]">
+      <!-- Title Box -->
+      <div class="modal-header bg-gray-700 p-4 rounded-t-lg">
+        <h2 class="text-2xl font-bold text-center">Set Client Status</h2>
+      </div>
+  
+      <!-- Last Updated Text -->
+      <div class="text-center mt-4 last-updated">
+        <p class="text-lg font-bold">
+          <span class="text-white">Last Updated:</span>
+          <span class="text-green-500">Not Set</span>
+        </p>
+      </div>
+  
+      <!-- Dropdown -->
+      <select id="client-status" class="w-full mt-6 mb-8 border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-lg">
+        <option value="" disabled selected>Select</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+        <option value="yet-to-start">Yet to Start</option>
+      </select>
+  
+      <!-- Buttons -->
+      <div class="flex justify-end space-x-6 mt-6">
+        <button type="button" onclick="saveClientStatus()" class="bg-green-500 px-6 py-2 rounded text-white text-lg">Save</button>
+        <button type="button" onclick="closeModal('set-client-status-modal')" class="bg-red-500 px-6 py-2 rounded text-white text-lg">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+
+
+
+  
+
+
+
 </body>
 </html>
