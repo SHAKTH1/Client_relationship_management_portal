@@ -114,10 +114,12 @@ function displayMoMs(moms) {
             <td>${mom.heading}</td>
             <td>${new Date(mom.dateTime).toLocaleString()}</td>
             <td>
-                <button class="view-button bg-blue-500 text-white py-1 px-3 rounded-md mr-2" data-id="${mom._id}">View</button>
-                
-            </td> 
-        `;
+            ${mom.attachments ? `<a href="${mom.attachments}" target="_blank" class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2">View Document</a>` : ''}
+            <button class="view-button bg-blue-500 text-white py-1 px-3 rounded-md mr-2" data-id="${mom._id}">View</button>
+            <button class="edit-button bg-yellow-500 text-white py-1 px-3 rounded-md mr-2" data-id="${mom._id}">Edit</button>
+            <button class="delete-button bg-red-500 text-white py-1 px-3 rounded-md" data-id="${mom._id}">Delete</button>
+        </td>
+    `;
         momTable.appendChild(row);
     });
 
@@ -292,6 +294,9 @@ function displayMoMDetails(mom) {
             <p><strong>Summary:</strong> ${mom.summary}</p>
             <p><strong>Date and Time:</strong> ${new Date(mom.dateTime).toLocaleString()}</p>
             <div class="flex justify-end mt-4">
+            ${mom.attachments ? `<p><strong>Attachment:</strong> <a href="${mom.attachments}" target="_blank">View Document</a></p>` : ''}
+            <div class="flex justify-end mt-4">
+
             <button id="editViewButton" class="bg-blue-500 py-2 px-4 rounded-md">Edit</button>
                   <button id="deleteViewButton" class="bg-blue-500 py-2 px-4 rounded-md">Delete</button>
                 <button id="closeViewButton" class="bg-blue-500 py-2 px-4 rounded-md">Close</button>
