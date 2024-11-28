@@ -1,4 +1,4 @@
-addocument.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const PAGE_SIZE = 10;
     let currentPage = 1;    
     let totalPages = 1;

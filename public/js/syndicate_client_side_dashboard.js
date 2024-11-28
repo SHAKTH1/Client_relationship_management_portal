@@ -125,6 +125,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 <a href="#" onclick="handleEditClient('${client._id}')">Edit</a>
                 <a href="#" onclick="handleDeleteClient('${client._id}')">Delete</a>
               </div>
+=======
+    clients.forEach((client) => {
+      const profileImage = client.faceImage ? `/images/${client.faceImage}` : 'https://via.placeholder.com/80';
+      console.log('Client faceImage:', client.faceImage, 'Profile Image Path:', profileImage); // Debug log
+
+      const row = `
+      <tr>
+        <td class="py-2 px-4">
+          <img id="profile-img" src="${profileImage}" alt="Profile" class="profile-img cursor-pointer" style="width: 50px; height: 50px; border-radius: 50%;" onclick="openImagePopup('${profileImage}')">
+        </td>
+        <td class="py-2 px-4">${client.name || 'N/A'}</td>
+        <td class="py-2 px-4">${client.domain || 'N/A'}</td>
+        <td class="py-2 px-4">${new Date(client.createdAt).toLocaleString()}</td>
+        <td class="py-2 px-4">
+          <div class="relative inline-block text-left">
+            <button onclick="toggleDropdown('${client._id}', event)" class="bg-blue-500 px-2 py-1 rounded">Actions</button>
+            <div id="dropdown-${client._id}" class="dropdown-content hidden bg-white text-black absolute z-10">
+              <a href="#" onclick="handleViewClient('${client._id}')">View</a>
+              <a href="#" onclick="handleEditClient('${client._id}')">Edit</a>
+              <a href="#" onclick="handleDeleteClient('${client._id}')">Delete</a>
+
             </div>
           </td>
           <td class="py-2 px-4">
