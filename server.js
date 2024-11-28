@@ -1932,6 +1932,42 @@ router.get('/api/visit-history', async (req, res) => {
 });
 
 
+cron.schedule('0 * * * *', async () => { // Runs every hour on the hour
+  try {
+    console.log('Starting auto-checkout process...');
+
+    // Find all visits where checkOutTime is null and it's been more than 6 hours since check-in
+    const pendingCheckouts = await Visit.find({
+      checkOutTime: null, // No check-out has been recorded
+      checkInTime: { $lte: new Date(Date.now() - 6 * 60 * 60 * 1000) } // Check-in time was more than 6 hours ago
+    });
+
+    if (pendingCheckouts.length > 0) {
+      console.log(`Found ${pendingCheckouts.length} pending checkouts for auto-checkout.`);
+
+      for (const visit of pendingCheckouts) {
+        try {
+          // Calculate the check-out time as 6 hours after the check-in time
+          const autoCheckOutTime = new Date(visit.checkInTime);
+          autoCheckOutTime.setHours(autoCheckOutTime.getHours() + 6);
+
+          // Update the checkout time in the visit document
+          visit.checkOutTime = autoCheckOutTime;
+          await visit.save();
+
+          console.log(`Auto-checked out visit with ID: ${visit._id}, Client ID: ${visit.clientId}`);
+        } catch (error) {
+          console.error(`Error processing auto-checkout for visit ID: ${visit._id}`, error);
+        }
+      }
+    } else {
+      console.log('No pending checkouts found for auto-checkout.');
+    }
+  } catch (error) {
+    console.error('Error during auto-checkout process:', error);
+  }
+});
+
 // bangalore_event
 
 
