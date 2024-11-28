@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 qrbox: 250
             },
             onScanSuccess,
-            onScanFailure
+            // onScanFailure
         ).catch(err => {
             console.error(`Failed to start QR code scanner: ${err}`);
             alert('Unable to access camera. Please check browser permissions.');
@@ -193,9 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
 
-    function onScanFailure(error) {
-        console.error(`QR Code scan failed: ${error}`);
-    }
+    // function onScanFailure(error) {
+    //     console.error(`QR Code scan failed: ${error}`);
+    // }
 
     // Handle Check In button click
     document.getElementById('check-in-btn').addEventListener('click', () => {

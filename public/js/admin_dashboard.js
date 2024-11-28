@@ -201,6 +201,88 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchVisitorDetails('all', currentPage);
 });
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    const advancedSearchButton = document.getElementById('advancedSearchButton');
+    const advancedSearchModal = document.getElementById('advancedSearchModal');
+    const closeAdvancedSearchModal = document.getElementById('closeAdvancedSearchModal');
+    const domainSearchInput = document.getElementById('domainSearchInput');
+    const domainDropdown = document.getElementById('domainDropdown');
+    const searchButton = document.getElementById('searchButton');
+
+    // Domain List
+    const domains = [
+        "Health Care", "Food", "Agriculture", "IT Software", "Electronics", "Government Agencies", 
+        "NGO", "Investors", "Civil Infrastructure", "Future Mobility", "Fintech", "Architecture",
+        "Interior Design", "Real Estate", "Education", "Biotech", "Bio Informatics", "Electrical",
+        "Semiconductors", "Corporate", "MNC", "Promoters", "B2B", "Designers", "IT Hardware",
+        "Manufacturer", "Researcher", "Others", "Scientist", "Defence", "Energy", "Telecommunications",
+        "Retail", "Banking", "E-commerce", "Marketing", "Logistics", "Aerospace", "Automotive",
+        "Healthcare IT", "Pharmaceuticals", "Cybersecurity", "Data Analytics", "Machine Learning",
+        "AI & Robotics", "Climate Tech", "Blockchain", "Smart Cities", "SaaS", "Insurance",
+        "Investment Banking", "Capital Markets", "Venture Capital", "Environmental", "Public Relations",
+        "Hospitality", "Entertainment", "Media & Journalism", "Consumer Goods", "Textile", "Legal",
+        "Human Resources", "Renewable Energy", "Mining", "Chemical Industry", "Apparel & Fashion",
+        "Social Services", "Transportation", "Maritime", "Photography", "Construction",
+        "Waste Management", "Animal Health", "Luxury Goods", "Tourism", "Oceanography",
+        "Nanotechnology", "Personal Finance", "Behavioral Science", "Human Rights",
+        "Urban Development", "Renewable Resources", "Drone Technology", "Augmented Reality",
+        "Virtual Reality", "Gaming", "Event Management", "Pension Funds", "Agritech",
+        "Health Informatics", "Ocean Conservation", "Culinary Arts", "Consumer Electronics",
+        "Digital Marketing", "Product Development", "Sustainable Development", "Home Automation",
+        "Agronomy", "Biometrics", "Material Science", "Petroleum Engineering", "Music Production",
+        "Veterinary Sciences", "Clinical Trials", "Public Policy", "Optics & Photonics",
+        "Home Security", "Forestry", "Speech Recognition", "Smart Manufacturing", "Genetics",
+        "Hydrology", "Microbiology", "Neurology", "Renewable Infrastructure", "Hydrogen Technology",
+        "Biofuel", "Sports Science", "Telemedicine", "Telecommunications Equipment", "Child Welfare",
+        "Behavioral Analytics"
+    ];
+
+    // Open modal
+    advancedSearchButton.addEventListener('click', () => {
+        advancedSearchModal.classList.remove('hidden');
+    });
+
+    // Close modal
+    closeAdvancedSearchModal.addEventListener('click', () => {
+        advancedSearchModal.classList.add('hidden');
+    });
+
+    // Populate initial domain dropdown
+    const populateDropdown = (list) => {
+        domainDropdown.innerHTML = list.map(domain => `<option value="${domain}">${domain}</option>`).join('');
+    };
+    populateDropdown(domains);
+
+    // Filter dropdown options based on input
+    domainSearchInput.addEventListener('input', (event) => {
+        const searchText = event.target.value.toLowerCase();
+        const filteredDomains = domains.filter(domain => domain.toLowerCase().includes(searchText));
+        populateDropdown(filteredDomains);
+    });
+
+    // Search button logic
+    searchButton.addEventListener('click', () => {
+        const selectedCategory = document.querySelector('input[name="category"]:checked')?.value;
+        const selectedDomain = domainDropdown.value;
+
+        if (!selectedCategory || !selectedDomain) {
+            alert('Please select both a category and a domain.');
+            return;
+        }
+
+        console.log(`Selected Category: ${selectedCategory}`);
+        console.log(`Selected Domain: ${selectedDomain}`);
+
+        // Add your search implementation here
+
+        advancedSearchModal.classList.add('hidden'); // Close the modal after search
+    });
+});
+
+
+
+
  // Function to open the image popup with the clicked image
  function openImagePopup(imageUrl) {
     const imagePopup = document.getElementById('imagePopup');
@@ -517,6 +599,10 @@ document.getElementById('profileButton').addEventListener('click', function() {
     var dropdown = document.getElementById('profileDropdown');
     dropdown.classList.toggle('hidden');
 });
+
+
+
+
 
 document.addEventListener('click', function(event) {
     var isClickInsideNotification = document.getElementById('notificationButton').contains(event.target);
