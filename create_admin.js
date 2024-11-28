@@ -4,7 +4,6 @@ const Admin = require('./models/admin.js'); // Adjust path as necessary
 
 
 
-
 async function main() {
   try {
     // Connect to MongoDB
