@@ -9,7 +9,7 @@ const clientSchema = new mongoose.Schema({
   personReferred: { type: String },
   domain: { type: String, required: true },
   faceImage: { type: mongoose.Schema.Types.ObjectId },
-  status: { type: String, default: 'New' },
+  client_status: { type: String, default: 'New' },
   // businessProposalStatus: { type: String, default: 'New' },
   customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
   serviceProvider: { type: mongoose.Schema.Types.ObjectId, ref: 'ServiceProvider' },

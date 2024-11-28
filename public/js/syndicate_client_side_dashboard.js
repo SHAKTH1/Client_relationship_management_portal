@@ -172,37 +172,62 @@ window.handleDropdownChange = function(clientId, selectedValue) {
 
 
 
-
-
-
-// Store last updated values for clients
-// Store last updated values for each client and modal
-const lastUpdated = {};
-
-// Open a modal and set the "Last Updated" text
-window.openModal = function (modalId, clientId) {
+// Open a modal and fetch the appropriate "Last Updated" value
+window.openModal = async function (modalId, clientId) {
   const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.classList.remove('hidden'); // Show modal
-    modal.dataset.clientId = clientId; // Store clientId for further use
+  if (!modal) {
+    console.error(`Modal with ID "${modalId}" not found.`);
+    return;
+  }
 
-    // Fetch the last updated value for this modal and client
-    const key = `${modalId}-${clientId}`; // Unique key per modal and client
-    const lastUpdate = lastUpdated[key] || 'Not Set'; // Default to "Not Set"
+  try {
+    // Fetch the client details from the backend
+    const token = localStorage.getItem('syndicateToken');
+    const response = await fetch(`/api/syndicateclient/${clientId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    // Update the "Last Updated" text
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch client details: ${errorData.message || response.statusText}`);
+    }
+
+    const clientData = await response.json();
+    console.log('Fetched client data:', clientData);
+
+    // Determine the field to display in "Last Updated"
     const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
     if (lastUpdatedElement) {
-      lastUpdatedElement.textContent = lastUpdate;
+      let lastUpdatedValue = 'Not Set';
+
+      // Set the value based on the modal type
+      if (modalId === 'set-priority-modal') {
+        lastUpdatedValue = clientData.priority || 'Not Set'; // Fetch priority field
+      } else if (modalId === 'set-client-status-modal') {
+        lastUpdatedValue = clientData.client_status || 'Not Set'; // Fetch client_status field
+      }
+
+      lastUpdatedElement.textContent = lastUpdatedValue; // Update with the appropriate value
     }
 
     // Reset the dropdown to default value
     const dropdown = modal.querySelector('select');
     if (dropdown) dropdown.value = '';
-  } else {
-    console.error(`Modal with ID "${modalId}" not found.`);
+
+    // Set clientId to the modal for further use
+    modal.dataset.clientId = clientId;
+
+    // Show the modal
+    modal.classList.remove('hidden');
+  } catch (error) {
+    console.error('Error fetching client details:', error);
+    alert('Failed to fetch client details. Please try again.');
   }
 };
+
 
 // Close a modal
 window.closeModal = function (modalId) {
@@ -215,74 +240,129 @@ window.closeModal = function (modalId) {
   }
 };
 
-// Save Priority
-window.savePriority = function () {
+//save priority 
+window.savePriority = async function () {
   const modal = document.getElementById('set-priority-modal');
   if (!modal) {
     console.error('Priority modal not found.');
     return;
   }
 
-  const clientId = modal.dataset.clientId;
+  const clientId = modal.dataset.clientId; // Get the client ID from the modal
   const priority = document.getElementById('priority-level').value;
+  const token = localStorage.getItem('syndicateToken'); // Fetch the token from localStorage
 
   if (!priority) {
     alert('Please select a priority level.');
     return;
   }
 
-  // Save the last selected priority for this client and modal
-  const key = `set-priority-modal-${clientId}`;
-  lastUpdated[key] = priority;
+  try {
+    console.log('Sending priority update to the backend:', { clientId, priority });
 
-  console.log(`Priority "${priority}" set for Client ID: ${clientId}`);
+    // Send the updated priority to the backend
+    const response = await fetch(`/api/syndicateclients/${clientId}/priority`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Pass the syndicate token for authentication
+      },
+      body: JSON.stringify({ priority }), // Send the priority value
+    });
 
-  // Reflect the updated priority in the "Last Updated" section
-  const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
-  if (lastUpdatedElement) {
-    lastUpdatedElement.textContent = priority;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to update priority: ${errorData.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log(`Priority updated successfully in the backend:`, data);
+
+    alert(`Priority updated to "${priority}" successfully.`);
+
+    // Optionally refresh the client list after updating
+    fetchSyndicateClients(token);
+
+    // Close the modal after success
+    window.closeModal('set-priority-modal');
+  } catch (error) {
+    console.error('Error updating priority:', error);
+    alert('Failed to update priority. Please try again.');
   }
-
-  window.closeModal('set-priority-modal');
 };
 
 // Save Client Status
-window.saveClientStatus = function () {
+window.saveClientStatus = async function () {
   const modal = document.getElementById('set-client-status-modal');
   if (!modal) {
     console.error('Client Status modal not found.');
     return;
   }
 
-  const clientId = modal.dataset.clientId;
+  const clientId = modal.dataset.clientId; // Get the client ID from the modal
   const status = document.getElementById('client-status').value;
+  const token = localStorage.getItem('syndicateToken'); // Fetch the token from localStorage
 
   if (!status) {
     alert('Please select a client status.');
     return;
   }
 
-  // Save the last selected status for this client and modal
-  const key = `set-client-status-modal-${clientId}`;
-  lastUpdated[key] = status;
+  try {
+    console.log('Sending client status update to the backend:', { clientId, status });
 
-  console.log(`Client Status "${status}" set for Client ID: ${clientId}`);
+    // Send the updated status to the backend
+    const response = await fetch(`/api/syndicateclients/${clientId}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Send token for authentication
+      },
+      body: JSON.stringify({ client_status: status }), // Send the client status
+    });
 
-  // Reflect the updated status in the "Last Updated" section
-  const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
-  if (lastUpdatedElement) {
-    lastUpdatedElement.textContent = status;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to update client status: ${errorData.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log(`Client Status updated successfully in the backend:`, data);
+
+    alert(`Client Status updated to "${status}" successfully.`);
+
+    // Fetch the updated client data to display in the "Last Updated" section
+    const fetchResponse = await fetch(`/api/syndicateclient/${clientId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`, // Fetch using the syndicate token
+      },
+    });
+
+    if (!fetchResponse.ok) {
+      const errorData = await fetchResponse.json();
+      throw new Error(`Failed to fetch updated client details: ${errorData.message || fetchResponse.statusText}`);
+    }
+
+    const updatedClient = await fetchResponse.json();
+    console.log('Updated client data:', updatedClient);
+
+    // Reflect the updated status in the "Last Updated" section
+    const lastUpdatedElement = modal.querySelector('.last-updated span.text-green-500');
+    if (lastUpdatedElement) {
+      lastUpdatedElement.textContent = updatedClient.client_status || 'Not Set'; // Update with the latest status
+    }
+
+    // Optionally refresh the client list after updating
+    fetchSyndicateClients(token);
+
+    // Close the modal after success
+    window.closeModal('set-client-status-modal');
+  } catch (error) {
+    console.error('Error updating client status:', error);
+    alert('Failed to update client status. Please try again.');
   }
-
-  window.closeModal('set-client-status-modal');
 };
-
-
-
-
-
-
-
 
 
   function renderPagination() {

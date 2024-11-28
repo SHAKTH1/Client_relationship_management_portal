@@ -568,6 +568,7 @@ app.get('/api/strategy-partners', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Error fetching strategy partners' });
   }
 });
+
 // Endpoint to fetch syndicate token by userId
 app.get('/api/getSyndicateToken/:userId', authenticateToken, async (req, res) => {
   try {
@@ -854,22 +855,22 @@ app.get('/api/admin/:adminId/clients', authenticateToken, async (req, res) => {
 });
 
 
-// Update visitor status route
-app.put('/visitors/:id/status', async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
+// // Update visitor status route
+// app.put('/visitors/:id/status', async (req, res) => {
+//   const { id } = req.params;
+//   const { status } = req.body;
 
-  try {
-      const client = await Client.findByIdAndUpdate(id, { status }, { new: true });
-      if (!client) {
-          return res.status(404).json({ error: 'Client not found' });
-      }
-      res.json({ message: 'Status updated successfully', client });
-  } catch (error) {
-      console.error('Error updating client status:', error);
-      res.status(500).json({ error: 'Internal server error' });
-  }
-});
+//   try {
+//       const client = await Client.findByIdAndUpdate(id, { status }, { new: true });
+//       if (!client) {
+//           return res.status(404).json({ error: 'Client not found' });
+//       }
+//       res.json({ message: 'Status updated successfully', client });
+//   } catch (error) {
+//       console.error('Error updating client status:', error);
+//       res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
 
 // //update status in qualified section
 // router.put('/clients/:id/status', async (req, res) => {
@@ -1714,31 +1715,60 @@ router.delete('/api/mom/delete/:momId', async (req, res) => {
   }
 });
 
-// set priority in snydicate dashboard 
 
-app.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, res) => {
+
+router.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { priority } = req.body;
 
   if (!['low', 'medium', 'high'].includes(priority)) {
-      return res.status(400).json({ message: 'Invalid priority value. Must be one of "low", "medium", or "high".' });
+    return res.status(400).json({ message: 'Invalid priority value.' });
   }
 
   try {
-      const updatedClient = await Client.findByIdAndUpdate(
-          id, 
-          { priority }, // Update the priority field
-          { new: true } // Return the updated document
-      );
+    const updatedClient = await Client.findByIdAndUpdate(
+      id,
+      { priority },
+      { new: true } // Return the updated client document
+    );
 
-      if (!updatedClient) {
-          return res.status(404).json({ message: 'Client not found' });
-      }
+    if (!updatedClient) {
+      return res.status(404).json({ message: 'Client not found.' });
+    }
 
-      res.status(200).json({ message: 'Priority updated successfully', client: updatedClient });
+    console.log(`Priority successfully updated:`, updatedClient); // Debug log
+
+    res.status(200).json({ message: 'Priority updated successfully.', client: updatedClient });
   } catch (error) {
-      console.error('Error updating priority:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error('Error updating priority:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// Set client status
+app.put('/api/syndicateclients/:id/status', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { client_status } = req.body;
+
+  if (!client_status) {
+    return res.status(400).json({ message: 'Client status is required.' });
+  }
+
+  try {
+    const updatedClient = await Client.findByIdAndUpdate(
+      id,
+      { client_status },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedClient) {
+      return res.status(404).json({ message: 'Client not found' });
+    }
+
+    res.status(200).json({ message: 'Client status updated successfully', client: updatedClient });
+  } catch (error) {
+    console.error('Error updating client status:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
