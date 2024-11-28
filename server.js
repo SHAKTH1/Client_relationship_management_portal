@@ -1796,124 +1796,103 @@ app.get('/api/client/public/:id', async (req, res) => {
 });
 
 
-
-// Check-in
+// Check-in with 'hereToMeet' and 'agenda'
 app.post('/api/client/:id/checkin', async (req, res) => {
+  const { hereToMeet, agenda } = req.body;
+
+  if (!hereToMeet || !agenda) {
+    return res.status(400).json({ success: false, message: "'Here to meet' and 'Agenda' are required." });
+  }
+
   try {
-      // Try to find the client in the Client collection
-      let client = await Client.findById(req.params.id);
-      let collectionType = 'Client';
+    // Try to find the client in the Client collection
+    let client = await Client.findById(req.params.id);
+    let collectionType = 'Client';
 
-      // If not found in Client, try to find in SyndicateClient
-      if (!client) {
-          client = await SyndicateClient.findById(req.params.id);
-          collectionType = 'SyndicateClient';
+    // If not found in Client, try to find in SyndicateClient
+    if (!client) {
+      client = await SyndicateClient.findById(req.params.id);
+      collectionType = 'SyndicateClient';
+    }
+
+    if (client) {
+      // Check if the client has already checked in today
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0); // Start of the day
+
+      const existingVisit = await Visit.findOne({
+        clientId: client._id,
+        collectionType: collectionType,
+        checkInTime: { $gte: startOfDay }
+      });
+
+      if (existingVisit) {
+        return res.json({ success: false, message: 'Client has already checked in today.' });
       }
 
-      if (client) {
-          // Check if the client has already checked in today
-          const startOfDay = new Date();
-          startOfDay.setHours(0, 0, 0, 0); // Set time to the start of the day
+      // Create a new visit entry if not already checked in today
+      const newVisit = new Visit({
+        clientId: client._id,
+        collectionType: collectionType,
+        checkInTime: new Date(),
+        hereToMeet,
+        agenda
+      });
+      await newVisit.save();
 
-          const existingVisit = await Visit.findOne({
-              clientId: client._id,
-              collectionType: collectionType,
-              checkInTime: { $gte: startOfDay }
-          });
-
-          if (existingVisit) {
-              return res.json({ success: false, message: 'Client has already checked in today.' });
-          }
-
-          // Create a new visit entry if not already checked in today
-          const newVisit = new Visit({
-              clientId: client._id,
-              collectionType: collectionType,
-              checkInTime: new Date()
-          });
-          await newVisit.save();
-
-          res.json({ success: true, message: 'Check-in successful', collectionType });
-      } else {
-          res.json({ success: false, message: 'Client not found' });
-      }
+      res.json({ success: true, message: 'Check-in successful', collectionType });
+    } else {
+      res.json({ success: false, message: 'Client not found' });
+    }
   } catch (error) {
-      console.error('Error during check-in:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Error during check-in:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 // Check-out
 app.post('/api/client/:id/checkout', async (req, res) => {
   try {
-      // Try to find the client in the Client collection
-      let client = await Client.findById(req.params.id);
-      let collectionType = 'Client';
+    // Try to find the client in the Client collection
+    let client = await Client.findById(req.params.id);
+    let collectionType = 'Client';
 
-      // If not found in Client, try to find in SyndicateClient
-      if (!client) {
-          client = await SyndicateClient.findById(req.params.id);
-          collectionType = 'SyndicateClient';
-      }
+    // If not found in Client, try to find in SyndicateClient
+    if (!client) {
+      client = await SyndicateClient.findById(req.params.id);
+      collectionType = 'SyndicateClient';
+    }
 
-      if (client) {
-          // Find the latest visit for today, regardless of whether checkOutTime is set
-          const startOfDay = new Date();
-          startOfDay.setHours(0, 0, 0, 0); // Start of the day
-          
-          const latestVisit = await Visit.findOne({
-              clientId: client._id,
-              collectionType: collectionType,
-              checkInTime: { $gte: startOfDay }
-          }).sort({ checkInTime: -1 });
+    if (client) {
+      // Find the latest visit for today, regardless of whether checkOutTime is set
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0); // Start of the day
+      
+      const latestVisit = await Visit.findOne({
+        clientId: client._id,
+        collectionType: collectionType,
+        checkInTime: { $gte: startOfDay }
+      }).sort({ checkInTime: -1 });
 
-          if (latestVisit) {
-              // Update the checkOutTime even if it was previously set (auto-checkout)
-              latestVisit.checkOutTime = new Date();
-              await latestVisit.save();
+      if (latestVisit) {
+        // Update the checkOutTime even if it was previously set (auto-checkout)
+        latestVisit.checkOutTime = new Date();
+        await latestVisit.save();
 
-              res.json({ success: true, message: 'Check-out successful', collectionType });
-          } else {
-              res.json({ success: false, message: 'No active check-in found for today.' });
-          }
+        res.json({ success: true, message: 'Check-out successful', collectionType });
       } else {
-          res.json({ success: false, message: 'Client not found' });
+        res.json({ success: false, message: 'No active check-in found for today.' });
       }
+    } else {
+      res.json({ success: false, message: 'Client not found' });
+    }
   } catch (error) {
-      console.error('Error during check-out:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Error during check-out:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-
-//auto checkout code 
-
-
-// Auto-checkout cron job
-cron.schedule('0 18 * * *', async () => {
-  try {
-      // Find all visits where checkOutTime is null and it's been more than 6 hours since check-in
-      const pendingCheckouts = await Visit.find({
-          checkOutTime: null,
-          checkInTime: { $lte: new Date(new Date() - 6 * 60 * 60 * 1000) } // 6 hours ago
-      });
-
-      // Iterate through each pending checkout
-      for (const visit of pendingCheckouts) {
-          // Calculate the checkout time as 6 hours after check-in
-          const checkOutTime = new Date(visit.checkInTime);
-          checkOutTime.setHours(checkOutTime.getHours() + 6);
-
-          // Update the checkout time in the visit document
-          await Visit.updateOne({ _id: visit._id }, { $set: { checkOutTime: checkOutTime } });
-      }
-
-      console.log('Automatic check-out completed for all pending check-ins.');
-  } catch (error) {
-      console.error('Error during automatic check-out:', error);
-  }
-});
-
-//visitor history
+// Visitor History with 'hereToMeet' and 'agenda'
 router.get('/api/visit-history', async (req, res) => {
   try {
     console.log('Fetching all visits...');
@@ -1932,7 +1911,12 @@ router.get('/api/visit-history', async (req, res) => {
             console.warn('No client found for visit:', visit._id);
             return { ...visit.toObject(), clientId: null }; // Gracefully handle missing clients
           }
-          return { ...visit.toObject(), clientId: client };
+          return { 
+            ...visit.toObject(), 
+            clientId: client,
+            hereToMeet: visit.hereToMeet, // Include the 'hereToMeet' field
+            agenda: visit.agenda // Include the 'agenda' field
+          };
         } catch (err) {
           console.error('Error populating client data for visit:', visit._id, err);
           return { ...visit.toObject(), clientId: null }; // Handle errors gracefully

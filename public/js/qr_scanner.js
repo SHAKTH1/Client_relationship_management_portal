@@ -111,14 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Add an additional check to ensure clientId has the necessary properties
                     if (visit.clientId && visit.clientId.name) {
                         historyList.innerHTML += `
-                            <div class="border p-2 mt-2">
-                                <p><strong>Name:</strong> ${visit.clientId.name}</p>
-                                <p><strong>Phone:</strong> ${visit.clientId.phone}</p>
-                                <p><strong>Email:</strong> ${visit.clientId.email}</p>
-                                <p><strong>Check-in:</strong> ${new Date(visit.checkInTime).toLocaleString()}</p>
-                                <p><strong>Check-out:</strong> ${visit.checkOutTime ? new Date(visit.checkOutTime).toLocaleString() : 'N/A'}</p>
-                            </div>
-                        `;
+                        <div class="border p-2 mt-2">
+                            <p><strong>Name:</strong> ${visit.clientId.name}</p>
+                            <p><strong>Phone:</strong> ${visit.clientId.phone}</p>
+                            <p><strong>Email:</strong> ${visit.clientId.email}</p>
+                            <p><strong>Check-in:</strong> ${new Date(visit.checkInTime).toLocaleString()}</p>
+                            <p><strong>Check-out:</strong> ${visit.checkOutTime ? new Date(visit.checkOutTime).toLocaleString() : 'N/A'}</p>
+                            <p><strong>Here to meet:</strong> ${visit.hereToMeet}</p>
+                            <p><strong>Agenda:</strong> ${visit.agenda}</p>
+                        </div>
+                    `;
+                    
                     }
                 });
             }
@@ -174,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('client-photo').src = `/images/${clientDetails.photoId}`;
                             document.getElementById('client-photo').style.display = 'block';
                         }
-    
+                        document.getElementById('additional-fields').style.display = 'block'; // Show additional fields
                         document.getElementById('check-in-btn').style.display = 'block';
                         document.getElementById('check-out-btn').style.display = 'block';
                     } else {
@@ -209,27 +212,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleCheckInOut(action) {
         if (clientDetails.id) {
-            fetch(`/api/client/${clientDetails.id}/${action}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ timestamp: new Date() })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(`${action === 'checkin' ? 'Check In' : 'Check Out'} successful!`);
-                } else {
-                    alert(data.message); // Display the message from the server
+            if (action === 'checkin') {
+                const hereToMeet = document.getElementById('here-to-meet').value.trim();
+                const agenda = document.getElementById('agenda').value.trim();
+    
+                if (!hereToMeet || !agenda) {
+                    alert('Please enter "Here to meet" and "Agenda" before checking in.');
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error(`Error during ${action}:`, error);
-                alert(`Error during ${action}. Please try again.`);
-            });
+    
+                fetch(`/api/client/${clientDetails.id}/${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        timestamp: new Date(),
+                        hereToMeet,
+                        agenda
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`${action === 'checkin' ? 'Check In' : 'Check Out'} successful!`);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error during ${action}:`, error);
+                    alert(`Error during ${action}. Please try again.`);
+                });
+            } else {
+                // Check-out logic
+                fetch(`/api/client/${clientDetails.id}/${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ timestamp: new Date() })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Check Out successful!');
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during check-out:', error);
+                    alert('Error during check-out. Please try again.');
+                });
+            }
         }
     }
+    
     
 });
 
