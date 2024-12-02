@@ -85,17 +85,18 @@ process.env.MONGODB_URI = 'mongodb+srv://shakthi:shakthi@shakthi.xuq11g4.mongodb
 let gridfsBucket;
 let faceImagesBucket;
 let visitingCardBucket;
-
+let momAttachmentsBucket;
 
 // Initialize GridFS buckets after MongoDB connection
 mongoose.connection.once('open', () => {
   faceImagesBucket = new GridFSBucket(mongoose.connection.db, { bucketName: 'faceImages' });
   visitingCardBucket = new GridFSBucket(mongoose.connection.db, { bucketName: 'visitingCards' });
+  momAttachmentsBucket = new GridFSBucket(mongoose.connection.db, { bucketName: 'momAttachments' });
   console.log('GridFS buckets initialized for faceImages and visitingCards');
 });
 
 
-
+const momAttachmentStorage = multer.memoryStorage();
 const faceImageStorage = multer.memoryStorage();
 const visitingCardStorage = multer.memoryStorage();
 
@@ -103,6 +104,7 @@ const visitingCardStorage = multer.memoryStorage();
 
 const faceImageUpload = multer({ storage: faceImageStorage }).single('faceImage');
 const visitingCardUpload = multer({ storage: visitingCardStorage }).fields([{ name: 'front', maxCount: 1 }, { name: 'back', maxCount: 1 }]);
+const momAttachmentUpload = multer({ storage: momAttachmentStorage }).array('attachments', 5); 
 
 
 const storage = multer.memoryStorage();
@@ -1673,6 +1675,7 @@ router.get('/api/mom/view/:momId', async (req, res) => {
 
 
 
+
 // Update MoM by ID
 router.put('/api/mom/update/:momId', async (req, res) => {
   const { momId } = req.params;
@@ -1715,6 +1718,116 @@ router.delete('/api/mom/delete/:momId', async (req, res) => {
   }
 });
 
+// Create a new MoM with attachments
+app.post('/api/mom/create', momAttachmentUpload, async (req, res) => {
+  const { leadId, heading, summary, dateTime } = req.body;
+
+  if (!leadId || !heading || !summary || !dateTime) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  try {
+    const attachmentIds = [];
+    if (req.files && req.files.length > 0) {
+      // Store each attachment in GridFS
+      for (const file of req.files) {
+        const filename = `${crypto.randomBytes(16).toString('hex')}${path.extname(file.originalname)}`;
+        const uploadStream = momAttachmentsBucket.openUploadStream(filename);
+        uploadStream.end(file.buffer);
+
+        await new Promise((resolve, reject) => {
+          uploadStream.on('finish', () => {
+            attachmentIds.push(uploadStream.id);
+            resolve();
+          });
+          uploadStream.on('error', reject);
+        });
+      }
+    }
+
+    // Create and save new MoM
+    const newMoM = new MoM({
+      leadId,
+      heading,
+      summary,
+      dateTime,
+      attachments: attachmentIds
+    });
+
+    await newMoM.save();
+    res.status(201).json({ message: 'MoM created successfully', mom: newMoM });
+  } catch (error) {
+    console.error('Error creating MoM:', error);
+    res.status(500).json({ error: 'Error creating MoM. Please try again later.' });
+  }
+});
+
+
+// Update an existing MoM, including adding attachments
+app.put('/api/mom/update/:momId', momAttachmentUpload, async (req, res) => {
+  const { momId } = req.params;
+  const { heading, summary, dateTime } = req.body;
+
+  try {
+    const mom = await MoM.findById(momId);
+    if (!mom) {
+      return res.status(404).json({ error: 'MoM not found.' });
+    }
+
+    // Update MoM fields
+    mom.heading = heading || mom.heading;
+    mom.summary = summary || mom.summary;
+    mom.dateTime = dateTime || mom.dateTime;
+
+    // Handle new attachments
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const filename = `${crypto.randomBytes(16).toString('hex')}${path.extname(file.originalname)}`;
+        const uploadStream = momAttachmentsBucket.openUploadStream(filename);
+        uploadStream.end(file.buffer);
+
+        await new Promise((resolve, reject) => {
+          uploadStream.on('finish', () => {
+            mom.attachments.push(uploadStream.id); // Add attachment ID to MoM
+            resolve();
+          });
+          uploadStream.on('error', reject);
+        });
+      }
+    }
+
+    await mom.save();
+    res.status(200).json({ message: 'MoM updated successfully', mom });
+  } catch (error) {
+    console.error('Error updating MoM:', error);
+    res.status(500).json({ error: 'Error updating MoM. Please try again later.' });
+  }
+});
+
+// Download an attachment by ID
+app.get('/api/mom/attachment/:attachmentId', async (req, res) => {
+  const { attachmentId } = req.params;
+
+  try {
+    const downloadStream = momAttachmentsBucket.openDownloadStream(mongoose.Types.ObjectId(attachmentId));
+
+    downloadStream.on('data', (chunk) => {
+      res.write(chunk);
+    });
+
+    downloadStream.on('end', () => {
+      res.end();
+    });
+
+    downloadStream.on('error', (error) => {
+      console.error('Error downloading attachment:', error);
+      res.status(404).json({ error: 'Attachment not found.' });
+    });
+  } catch (error) {
+    console.error('Error fetching attachment:', error);
+    res.status(500).json({ error: 'Error fetching attachment. Please try again later.' });
+  }
+});
 
 
 router.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, res) => {

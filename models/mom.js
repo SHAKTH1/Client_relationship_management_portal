@@ -5,6 +5,7 @@ const momSchema = new mongoose.Schema({
   heading: { type: String, required: true },
   summary: { type: String, required: true },
   dateTime: { type: Date, required: true },
+  attachments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'momAttachments' }],
   createdAt: { type: Date, default: Date.now }
   // Additional fields as needed
 }, { timestamps: true });
