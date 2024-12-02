@@ -108,15 +108,14 @@ async function fetchMoMs(leadId) {
         console.error('Error fetching MoMs:', error);
     }
 }
-
-// Display MoMs in the table with a "View" button for each
+// Update client-side displayMoMs function to correctly generate attachment links
 function displayMoMs(moms) {
     const momTable = document.getElementById('momTable');
     momTable.innerHTML = '';
     moms.forEach((mom, index) => {
         let attachmentsHTML = '';
         if (mom.attachments && mom.attachments.length > 0) {
-            attachmentsHTML = mom.attachments.map(att => `<a href="/uploads/${att}" target="_blank" class="text-blue-400" download>${att}</a>`).join('<br>');
+            attachmentsHTML = mom.attachments.map(att => `<a href="/api/mom/attachment/${att}" target="_blank" class="text-blue-400" download>Download Attachment</a>`).join('<br>');
         } else {
             attachmentsHTML = 'No attachments available';
         }
@@ -155,6 +154,7 @@ function displayMoMs(moms) {
         });
     });
 }
+
 // Fetch and display details of a specific MoM when "View" button is clicked
 async function viewMoM(momId) {
     try {

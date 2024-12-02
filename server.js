@@ -1803,14 +1803,15 @@ app.put('/api/mom/update/:momId', momAttachmentUpload, async (req, res) => {
     res.status(500).json({ error: 'Error updating MoM. Please try again later.' });
   }
 });
-
 // Download an attachment by ID
 app.get('/api/mom/attachment/:attachmentId', async (req, res) => {
   const { attachmentId } = req.params;
 
   try {
-    const downloadStream = momAttachmentsBucket.openDownloadStream(mongoose.Types.ObjectId(attachmentId));
+    const objectId = new mongoose.Types.ObjectId(attachmentId);
+    const downloadStream = momAttachmentsBucket.openDownloadStream(objectId);
 
+    // Set the appropriate headers for file download
     downloadStream.on('data', (chunk) => {
       res.write(chunk);
     });
@@ -1828,6 +1829,7 @@ app.get('/api/mom/attachment/:attachmentId', async (req, res) => {
     res.status(500).json({ error: 'Error fetching attachment. Please try again later.' });
   }
 });
+
 
 
 router.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, res) => {
