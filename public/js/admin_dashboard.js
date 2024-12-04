@@ -121,40 +121,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderVisitorDetails(visitorDetails) {
         const tableBody = document.getElementById('visitorsTableBody');
-        tableBody.innerHTML = '';
-
+        tableBody.innerHTML = ''; // Clear previous rows
+    
         if (visitorDetails.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4">No visitors found.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4">No visitors found.</td></tr>';
             return;
         }
-
+    
+        const startSerial = (currentPage - 1) * PAGE_SIZE; // Calculate starting serial number for the current page
+    
         visitorDetails.forEach((visitor, index) => {
+            const serialNumber = startSerial + index + 1; // Calculate serial number
             const createdAt = new Date(visitor.createdAt);
             const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()}`;
             const faceImageUrl = visitor.faceImage ? `/images/${visitor.faceImage}` : 'https://via.placeholder.com/80';
-
+    
             const row = document.createElement('tr');
             row.innerHTML = `
-               <td class="py-2 px-4">
-        <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;" onclick="openImagePopup('${faceImageUrl}')">
-    </td>
+                <td class="p-2">${serialNumber}</td> <!-- Serial Number Column -->
+                <td class="py-2 px-4">
+                    <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;" onclick="openImagePopup('${faceImageUrl}')">
+                </td>
                 <td class="p-2">${visitor.name}</td>
                 <td class="p-2">${formattedDate}</td>
                 <td class="p-2">${visitor.companyName || 'N/A'}</td>
                 <td class="p-2">${visitor.phone}</td>
                 <td class="p-2">${visitor.email}</td>
                 <td class="p-2">
-                    <select id="status-${index}" class="bg-gray-700 p-1 rounded" data-visitor-id="${visitor._id}">
-                        <option value="qualified" ${visitor.status === 'qualified' ? 'selected' : ''}>Qualified</option>
-                        <option value="on-hold" ${visitor.status === 'on-hold' ? 'selected' : ''}>On Hold</option>
-                        <option value="not-relevant" ${visitor.status === 'not-relevant' ? 'selected' : ''}>Not Relevant</option>
-                    </select>
                 </td>
-                <td class="p-2"><button class="save-button" data-visitor-id="${visitor._id}" style="padding: 5px 10px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Save</button></td>
+                
             `;
             tableBody.appendChild(row);
         });
     }
+    
+
     function renderPagination() {
         const paginationContainer = document.getElementById('pagination');
         paginationContainer.innerHTML = ''; // Clear previous pagination buttons
@@ -1210,8 +1211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td class="p-2">${item.companyName || ''}</td>
                     <td class="p-2">${item.phone || ''}</td>
                     <td class="p-2">${item.email || ''}</td>
-                    <td class="p-2">${item.action || ''}</td>
-                    <td class="p-2">${item.status || ''}</td>
+                    
                 `;
                 visitorsTableBody.appendChild(row);
             });
