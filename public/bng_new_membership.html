@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Multi-Step Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-4xl">
+    <h1 class="text-3xl font-bold text-center mb-6">Customer Request Form</h1>
+    
+    <div id="progress-container" class="mb-8">
+      <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-full bg-green-500 transition-all"></div>
+      </div>
+      <div class="flex justify-between mt-4 text-sm">
+        <span>1. Contact</span>
+        <span>2. Company</span>
+        <span>3. Product</span>
+        <span>4. Development</span>
+        <span>5. Market</span>
+        <span>6. Sustainability</span>
+      </div>
+    </div>
+
+    <form id="form" class="space-y-6">
+      <!-- Step 1: Contact Details -->
+      <div id="step-1" class="form-step">
+        <h2 class="text-xl font-bold mb-4">Contact Details</h2>
+        <div class="space-y-4">
+          <div>
+            <label for="contact-name" class="block text-sm font-medium mb-1">Name</label>
+            <input type="text" id="contact-name" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="contact-designation" class="block text-sm font-medium mb-1">Designation</label>
+            <input type="text" id="contact-designation" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="contact-phone" class="block text-sm font-medium mb-1">Phone</label>
+            <input type="tel" id="contact-phone" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="contact-email" class="block text-sm font-medium mb-1">Email</label>
+            <input type="email" id="contact-email" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="contact-address" class="block text-sm font-medium mb-1">Address</label>
+            <textarea id="contact-address" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Company Details -->
+      <div id="step-2" class="form-step hidden">
+        <h2 class="text-xl font-bold mb-4">Company Details</h2>
+        <div class="space-y-4">
+          <div>
+            <label for="company-name" class="block text-sm font-medium mb-1">Company Name</label>
+            <input type="text" id="company-name" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="company-domain" class="block text-sm font-medium mb-1">Domain</label>
+            <input type="text" id="company-domain" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="company-website" class="block text-sm font-medium mb-1">Website</label>
+            <input type="url" id="company-website" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+          <div>
+            <label for="company-turnover" class="block text-sm font-medium mb-1">Annual Turnover</label>
+            <input type="text" id="company-turnover" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Product Details -->
+     <!-- Within Step 3: Product Details -->
+<div id="step-3" class="form-step hidden">
+  <h2 class="text-xl font-bold mb-4">Product Details</h2>
+  <div class="space-y-4">
+    <div>
+      <label for="product-type" class="block text-sm font-medium mb-1">Product Type</label>
+      <select id="product-type" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+        <option value="">Select Product Type</option>
+        <option value="Consumer">Consumer Product</option>
+        <option value="Industrial">Industrial Product</option>
+        <option value="Software">Software Product</option>
+        <option value="Hardware">Hardware Product</option>
+      </select>
+    </div>
+    <div>
+      <label for="product-description" class="block text-sm font-medium mb-1">Product Description</label>
+      <textarea id="product-description" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="4" required></textarea>
+    </div>
+    <div>
+      <label for="key-features" class="block text-sm font-medium mb-1">Key Features</label>
+      <textarea id="key-features" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" required></textarea>
+    </div>
+    <div>
+      <label for="design-usp" class="block text-sm font-medium mb-1">Design & USP</label>
+      <textarea id="design-usp" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" required></textarea>
+    </div>
+    <div>
+      <label for="target-audience" class="block text-sm font-medium mb-1">Target Audience</label>
+      <input type="text" id="target-audience" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+    </div>
+    <div>
+      <label for="competitors" class="block text-sm font-medium mb-1">Competitors</label>
+      <input type="text" id="competitors" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+    </div>
+    <div>
+      <label for="development-stage" class="block text-sm font-medium mb-1">Development Stage</label>
+      <select id="development-stage" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+        <option value="">Select Development Stage</option>
+        <option value="Concept">Concept</option>
+        <option value="Designing">Designing</option>
+        <option value="Prototyping">Prototyping</option>
+        <option value="Testing">Testing</option>
+        <option value="Manufacturing">Manufacturing</option>
+        <option value="Launch">Launch</option>
+      </select>
+    </div>
+    <div>
+      <label for="partnership-collaboration" class="block text-sm font-medium mb-1">Partnership & Collaboration</label>
+      <select id="partnership-collaboration" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" multiple required>
+        <option value="Product Development">Product Development</option>
+        <option value="Cost Optimization">Cost Optimization</option>
+        <option value="Market Growth">Market Growth</option>
+        <option value="Sustainability">Sustainability</option>
+      </select>
+      <p class="text-sm text-gray-400 mt-1">Hold Ctrl (Windows) or Command (Mac) to select multiple options</p>
+    </div>
+    <div>
+      <p class="block text-sm font-medium mb-1">Prototyping Requirements</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="golden-sample" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Build Golden Sample</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="concept-prototype" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Concept to Prototype</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="compliance-certification" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Compliance & Certification</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="cost-optimization" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Cost Optimization</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="ergonomics" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Ergonomics</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="complex-product" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Complex Product</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- Step 4: Development Details -->
+      <div id="step-4" class="form-step hidden">
+  <h2 class="text-xl font-bold mb-4">Development Details</h2>
+  <div class="space-y-4">
+    <div>
+      <label for="development-stage" class="block text-sm font-medium mb-1">Development Stage</label>
+      <select id="development-stage" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" required>
+        <option value="">Select Development Stage</option>
+        <option value="Concept">Concept</option>
+        <option value="Designing">Designing</option>
+        <option value="Prototyping">Prototyping</option>
+        <option value="Testing">Testing</option>
+        <option value="Manufacturing">Manufacturing</option>
+        <option value="Launch">Launch</option>
+        <option value="Post-Launch">Post-Launch</option>
+        <option value="Sustainability">Sustainability</option>
+      </select>
+    </div>
+    <div>
+      <label for="technical-specs" class="block text-sm font-medium mb-1">Technical Specifications</label>
+      <textarea id="technical-specs" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Provide technical specifications here" required></textarea>
+    </div>
+    <div>
+      <label for="testing-methods" class="block text-sm font-medium mb-1">Testing Methods</label>
+      <textarea id="testing-methods" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe the testing methods"></textarea>
+    </div>
+    <div>
+      <label for="manufacturing-tech" class="block text-sm font-medium mb-1">Manufacturing Technology</label>
+      <textarea id="manufacturing-tech" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe the manufacturing technology used"></textarea>
+    </div>
+    <div>
+      <label for="production-capacity" class="block text-sm font-medium mb-1">Production Capacity</label>
+      <input type="text" id="production-capacity" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" placeholder="Specify production capacity (units per day/month)">
+    </div>
+    <div>
+      <label for="supply-chain" class="block text-sm font-medium mb-1">Supply Chain Requirements</label>
+      <textarea id="supply-chain" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe supply chain requirements"></textarea>
+    </div>
+    <div>
+      <p class="block text-sm font-medium mb-1">Design & Engineering Focus</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="mechanical-design" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Mechanical Design</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="electronics-design" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Electronics Design</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="firmware-design" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Firmware Design</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="industrial-design" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Industrial Design</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="system-optimization" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">System Optimization</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="overall-design" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Overall Design</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Step 5: Market Details -->
+      <div id="step-5" class="form-step hidden">
+  <h2 class="text-xl font-bold mb-4">Market Growth Details</h2>
+  <div class="space-y-4">
+    <div>
+      <label for="branding-strategies" class="block text-sm font-medium mb-1">Branding Strategies</label>
+      <textarea id="branding-strategies" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe your branding strategies"></textarea>
+    </div>
+    <div>
+      <label for="marketing-tactics" class="block text-sm font-medium mb-1">Marketing Tactics</label>
+      <textarea id="marketing-tactics" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Explain your marketing tactics"></textarea>
+    </div>
+    <div>
+      <p class="block text-sm font-medium mb-1">Target Market</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="local-market" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Local Market</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="national-market" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">National Market</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="international-market" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">International Market</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="emerging-market" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Emerging Markets</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="luxury-market" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Luxury Market</span>
+        </label>
+      </div>
+    </div>
+    <div>
+      <label for="pricing-strategy" class="block text-sm font-medium mb-1">Pricing Strategy</label>
+      <select id="pricing-strategy" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600">
+        <option value="">Select Pricing Strategy</option>
+        <option value="Cost-Based">Cost-Based Pricing</option>
+        <option value="Value-Based">Value-Based Pricing</option>
+        <option value="Competitive">Competitive Pricing</option>
+        <option value="Penetration">Penetration Pricing</option>
+        <option value="Premium">Premium Pricing</option>
+        <option value="Dynamic">Dynamic Pricing</option>
+      </select>
+    </div>
+    <div>
+      <label for="distribution-channels" class="block text-sm font-medium mb-1">Distribution Channels</label>
+      <textarea id="distribution-channels" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Explain your distribution channels"></textarea>
+    </div>
+    <div>
+      <label for="competitor-analysis" class="block text-sm font-medium mb-1">Competitor Analysis</label>
+      <textarea id="competitor-analysis" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Provide a competitor analysis"></textarea>
+    </div>
+    <div>
+      <label for="market-research" class="block text-sm font-medium mb-1">Market Research Focus</label>
+      <textarea id="market-research" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe your market research focus"></textarea>
+    </div>
+    <div>
+      <p class="block text-sm font-medium mb-1">Marketing Channels</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="social-media" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Social Media</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="digital-ads" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Digital Ads</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="print-media" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Print Media</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="tv-radio" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">TV & Radio</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="email-marketing" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Email Marketing</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="influencers" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Influencer Marketing</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Step 6: Sustainability -->
+      <div id="step-6" class="form-step hidden">
+  <h2 class="text-xl font-bold mb-4">Support & Sustainability</h2>
+  <div class="space-y-4">
+    <div>
+      <p class="block text-sm font-medium mb-1">Funding Support</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="equity" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Equity</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="debt" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Debt</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="project-finance" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Project Finance</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="subsidy" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Subsidy (DLI/PLI)</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="royalty" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Royalty</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="bg-lc" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Bank Guarantee / Letter of Credit</span>
+        </label>
+      </div>
+    </div>
+    <div>
+      <p class="block text-sm font-medium mb-1">Design & Sustainability</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="sustainable-design" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Sustainable Design</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="eco-friendly-packaging" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Eco-Friendly Packaging</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="green-logistics" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Green Logistics</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="recyclable-materials" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Use of Recyclable Materials</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="carbon-footprint-reduction" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Carbon Footprint Reduction</span>
+        </label>
+      </div>
+    </div>
+    <div>
+      <p class="block text-sm font-medium mb-1">After-Sales Support</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="installation" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Installation</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="commissioning" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Commissioning</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="maintenance" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Maintenance</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="service-centers" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Service Centers (Geo Coverage)</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="customer-training" class="form-checkbox h-5 w-5 text-green-500 border-gray-600 bg-gray-700">
+          <span class="ml-2">Customer Training Programs</span>
+        </label>
+      </div>
+    </div>
+    <div>
+      <label for="office-space-requirements" class="block text-sm font-medium mb-1">Office Space Requirements</label>
+      <textarea id="office-space-requirements" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe your office space requirements"></textarea>
+    </div>
+    <div>
+      <label for="lab-setup" class="block text-sm font-medium mb-1">Lab Setup Requirements</label>
+      <textarea id="lab-setup" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe lab setup requirements"></textarea>
+    </div>
+    <div>
+      <label for="mini-manufacturing" class="block text-sm font-medium mb-1">Mini-Manufacturing Setup</label>
+      <textarea id="mini-manufacturing" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600" rows="3" placeholder="Describe mini-manufacturing setup"></textarea>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between items-center pt-4">
+        <button type="button" id="prev-button" class="bg-gray-700 px-4 py-2 rounded-md hover:bg-gray-600 disabled:bg-gray-500" disabled>Previous</button>
+        <button type="button" id="save-button" class="bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-500">Save Progress</button>
+        <button type="button" id="next-button" class="bg-green-600 px-4 py-2 rounded-md hover:bg-green-500">Next</button>
+        <button type="submit" id="submit-button" class="bg-green-600 px-4 py-2 rounded-md hover:bg-green-500 hidden">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll('.form-step'));
+    const progressBar = document.getElementById('progress-bar');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const saveButton = document.getElementById('save-button');
+    const submitButton = document.getElementById('submit-button');
+    let currentStep = 0;
+
+    const updateForm = () => {
+      steps.forEach((step, index) => {
+        step.classList.toggle('hidden', index !== currentStep);
+      });
+      progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+      prevButton.disabled = currentStep === 0;
+      nextButton.classList.toggle('hidden', currentStep === steps.length - 1);
+      submitButton.classList.toggle('hidden', currentStep !== steps.length - 1);
+    };
+
+    nextButton.addEventListener('click', () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        updateForm();
+      }
+    });
+
+    prevButton.addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateForm();
+      }
+    });
+
+    saveButton.addEventListener('click', () => {
+      const formData = new FormData(document.querySelector('form'));
+      const data = Object.fromEntries(formData);
+      localStorage.setItem('formData', JSON.stringify(data));
+      alert('Progress saved!');
+    });
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Form submitted successfully!');
+      localStorage.removeItem('formData');
+    });
+
+    // Load saved progress
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedData = JSON.parse(localStorage.getItem('formData'));
+      if (savedData) {
+        for (const [key, value] of Object.entries(savedData)) {
+          const input = document.querySelector(`[id="${key}"]`);
+          if (input) input.value = value;
+        }
+      }
+    });
+
+    updateForm();
+  </script>
+</body>
+</html>
