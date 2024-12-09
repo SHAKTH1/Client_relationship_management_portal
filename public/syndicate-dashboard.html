@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lead Details Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/posspole_loader.css">
    
     <style>
         .modal {
@@ -47,6 +48,7 @@
     width: 100%;
     transition: border-color 0.3s ease;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .priority-select option:disabled {
@@ -479,32 +481,63 @@
 
  <!-- Set Priority Modal -->
  <div id="set-priority-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[50%] h-[50%]">
-      <!-- Title Box -->
+    <div
+      class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[90%] max-w-lg sm:max-w-md md:max-w-lg lg:max-w-xl"
+    >
+      <!-- Title -->
       <div class="modal-header bg-gray-700 p-4 rounded-t-lg">
-        <h2 class="text-2xl font-bold text-center">Set Priority</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-center">Set Priority</h2>
       </div>
   
-      <!-- Last Updated Text -->
+      <!-- Last Updated -->
       <div class="text-center mt-4 last-updated">
-        <p class="text-lg font-bold">
+        <p class="text-base sm:text-lg font-bold">
           <span class="text-white">Last Updated:</span>
           <span class="text-green-500">Not Set</span>
         </p>
       </div>
   
       <!-- Dropdown -->
-      <select id="priority-level" class="w-full mt-6 mb-8 border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-lg">
-        <option value="" disabled selected>Select</option>
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
+      <div class="mt-6">
+        <label for="priority-level" class="block mb-2 text-base sm:text-lg font-bold">Priority Level</label>
+        <select
+          id="priority-level"
+          class="w-full border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-base sm:text-lg"
+        >
+          <option value="" disabled selected>Select</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+  
+      <!-- Comments Box -->
+      <div class="mt-6">
+        <label for="comments-box-priority" class="block mb-2 text-base sm:text-lg font-bold">Comments</label>
+        <textarea
+          id="comments-box-priority"
+          rows="4"
+          placeholder="Enter your comments here..."
+          class="w-full border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-base sm:text-lg resize-none"
+        ></textarea>
+      </div>
   
       <!-- Buttons -->
-      <div class="flex justify-end space-x-6 mt-6">
-        <button type="button" onclick="savePriority()" class="bg-green-500 px-6 py-2 rounded text-white text-lg">Save</button>
-        <button type="button" onclick="closeModal('set-priority-modal')" class="bg-red-500 px-6 py-2 rounded text-white text-lg">Cancel</button>
+      <div class="flex flex-col sm:flex-row justify-end sm:space-x-6 space-y-4 sm:space-y-0 mt-6">
+        <button
+          type="button"
+          onclick="savePriority()"
+          class="bg-green-500 w-full sm:w-auto px-6 py-2 rounded text-white text-base sm:text-lg"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          onclick="closeModal('set-priority-modal')"
+          class="bg-red-500 w-full sm:w-auto px-6 py-2 rounded text-white text-base sm:text-lg"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -515,32 +548,63 @@
 
 <!-- Set Client Status Modal -->
 <div id="set-client-status-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[50%] h-[50%]">
-      <!-- Title Box -->
+    <div
+      class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg text-white w-[90%] max-w-lg sm:max-w-md md:max-w-lg lg:max-w-xl"
+    >
+      <!-- Title -->
       <div class="modal-header bg-gray-700 p-4 rounded-t-lg">
-        <h2 class="text-2xl font-bold text-center">Set Client Status</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-center">Set Client Status</h2>
       </div>
   
-      <!-- Last Updated Text -->
+      <!-- Last Updated -->
       <div class="text-center mt-4 last-updated">
-        <p class="text-lg font-bold">
+        <p class="text-base sm:text-lg font-bold">
           <span class="text-white">Last Updated:</span>
           <span class="text-green-500">Not Set</span>
         </p>
       </div>
   
       <!-- Dropdown -->
-      <select id="client-status" class="w-full mt-6 mb-8 border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-lg">
-        <option value="" disabled selected>Select</option>
-        <option value="pending">Pending</option>
-        <option value="completed">Completed</option>
-        <option value="yet-to-start">Yet to Start</option>
-      </select>
+      <div class="mt-6">
+        <label for="client-status" class="block mb-2 text-base sm:text-lg font-bold">Client Status</label>
+        <select
+          id="client-status"
+          class="w-full border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-base sm:text-lg"
+        >
+          <option value="" disabled selected>Select</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+          <option value="yet-to-start">Yet to Start</option>
+        </select>
+      </div>
+  
+      <!-- Comments Box -->
+      <div class="mt-6">
+        <label for="comments-box-status" class="block mb-2 text-base sm:text-lg font-bold">Comments</label>
+        <textarea
+          id="comments-box-status"
+          rows="4"
+          placeholder="Enter your comments here..."
+          class="w-full border-2 border-gray-400 rounded-lg bg-gray-700 text-white p-3 text-base sm:text-lg resize-none"
+        ></textarea>
+      </div>
   
       <!-- Buttons -->
-      <div class="flex justify-end space-x-6 mt-6">
-        <button type="button" onclick="saveClientStatus()" class="bg-green-500 px-6 py-2 rounded text-white text-lg">Save</button>
-        <button type="button" onclick="closeModal('set-client-status-modal')" class="bg-red-500 px-6 py-2 rounded text-white text-lg">Cancel</button>
+      <div class="flex flex-col sm:flex-row justify-end sm:space-x-6 space-y-4 sm:space-y-0 mt-6">
+        <button
+          type="button"
+          onclick="saveClientStatus()"
+          class="bg-green-500 w-full sm:w-auto px-6 py-2 rounded text-white text-base sm:text-lg"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          onclick="closeModal('set-client-status-modal')"
+          class="bg-red-500 w-full sm:w-auto px-6 py-2 rounded text-white text-base sm:text-lg"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -549,12 +613,13 @@
   
   
   
+  
 
 
 
   
 
-
+<script src="./js/posspole_loader.js"></script>
 
 </body>
 </html>

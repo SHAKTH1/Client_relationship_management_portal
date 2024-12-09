@@ -1,0 +1,29 @@
+/* Loader overlay */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Glass morphic effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  /* Loader GIF */
+  .loader-gif {
+    width: 35vw; /* Adjusted size between 30 and 40 */
+    height: auto;
+    max-width: 320px; /* Slightly larger maximum size for wider screens */
+  }
+  
+  
+  /* Hidden state for fade-out animation */
+  .loader-hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction during fade-out */
+  }
+  
