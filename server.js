@@ -37,7 +37,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const port = process.env.PORT || 3000;
-const secondport = process.env.PORT || 5001;
+
 
 const Client = require('./models/client.js');
 const Syndicate = require('./models/syndicate.js');
@@ -252,8 +252,8 @@ async function generateAndSendQRCode(client, isSyndicateClient = false) {
   try {
       // Determine the URL based on whether the client is a syndicate client
       const pageUrl = isSyndicateClient 
-          ? `https://www.posspole.line.pm/syndicate_client_side_visitorform.html`
-          : `https://www.posspole.line.pm/visitor.html`;
+          ? `https://www.erp.posspole.com/syndicate_client_side_visitorform.html`
+          : `https://www.erp.posspole.com/visitor.html`;
 
       // Use the unique client ID to create the QR code URL
       const qrData = `${pageUrl}?client_id=${client._id}`;
@@ -1973,7 +1973,7 @@ app.post('/api/client/:id/checkout', async (req, res) => {
     let collectionType = 'Client';
 
     // If not found in Client, try to find in SyndicateClient
-    if (!client) {
+    if (!client) {a
       client = await SyndicateClient.findById(req.params.id);
       collectionType = 'SyndicateClient';
     }
@@ -2253,11 +2253,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
-
-
-
-app.listen(secondport, () => {
-  console.log(`Server running on port ${secondport}`);
-});
-

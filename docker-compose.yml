@@ -7,12 +7,14 @@ services:
       - "3001:3000"
     environment:
       - MONGODB_URI=mongodb+srv://doadmin:0w5Bh26oH43E7cX1@db-mongodb-blr1-64234-171b1e0b.mongo.ondigitalocean.com/admin
+    volumes:
+      - ./public:/usr/src/app/public  # Bind the public directory to the host
     depends_on:
       - mongo
-    restart: always  # Add this line to always restart the container
+    restart: always  # Automatically restart the container
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]  # Healthcheck for the app container
-      interval: 1m30s
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
@@ -23,7 +25,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-    restart: always  # Ensure MongoDB also restarts
+    restart: always
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 30s
