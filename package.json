@@ -34,8 +34,11 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.20",
     "chai": "^5.1.2",
     "chai-http": "^5.1.1",
-    "mocha": "^10.8.2"
+    "mocha": "^10.8.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16"
   }
 }

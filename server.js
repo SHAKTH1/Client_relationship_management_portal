@@ -1568,56 +1568,109 @@ router.get('/api/customer/clients/:id', authenticateToken, async (req, res) => {
   }
 });
 
-
-
-// advanced search filter api 
-app.post('/advanced-search', async (req, res) => {
-  const { searchFields } = req.body;
+// Advanced Search API
+app.post('/api/advanced-search', async (req, res) => {
+  const { domain, category } = req.body;
 
   try {
-    let clients;
+    let clients = [];
 
-    // Log the incoming searchFields to ensure they're being received correctly
-    console.log(`Search fields: ${searchFields}`);
+    if (domain && !category) {
+      // Case 1: Search by domain
+      clients = await Client.find({ domain });
+    } else if (!domain && category) {
+      // Case 2: Search by category
+      const categoryModel = getCategoryModel(category); // Utility function to get the correct model
+      clients = await categoryModel.find();
+    } else if (domain && category) {
+      // Case 3: Search by both
+      const categoryModel = getCategoryModel(category);
+      const categoryData = await categoryModel.find({ domain });
 
-    const searchCriteria = searchFields.map(field => {
-      if (field === 'customer') {
-        return {
-          $or: [
-            { 'customer.project.titles': { $exists: true, $not: { $size: 0 } } },
-            { 'customer.service.lookingFor': { $exists: true, $not: { $size: 0 } } },
-            { 'customer.product.title': { $exists: true, $ne: "" } },
-            { 'customer.solution.titles': { $exists: true, $not: { $size: 0 } } },
-            { 'customer.others.titles': { $exists: true, $not: { $size: 0 } } }
-          ]
-        };
-      } else if (field === 'serviceProvider') {
-        return { 'serviceProvider.domain': { $exists: true, $not: { $size: 0 } } };
-      } else if (field === 'manufacturer') {
-        return { 'manufacturer.manufacturerdomain': { $exists: true, $ne: "" } };
-      } else if (field === 'channelPartner') {
-        return { 'channelPartner.channeldomain': { $exists: true, $ne: "" } };
-      } else if (field === 'investor') {
-        return { 'investor.domain': { $exists: true, $ne: "" } };
-      } else if (field === 'domainExpert') {
-        return { 'domainExpert.domaintitle': { $exists: true, $ne: "" } };
-      }
-    });
+      const categoryClientIds = categoryData.map((item) => item.clientId); // Assuming a `clientId` field links to the `clients` collection
 
-    // Log the search criteria
-    console.log(`Search criteria: ${JSON.stringify(searchCriteria)}`);
+      clients = await Client.find({
+        domain,
+        _id: { $in: categoryClientIds }, // Match both domain and linked client ID
+      });
+    }
 
-    clients = await Client.find({ $or: searchCriteria });
-
-    // Log the clients found
-    console.log(`Clients found: ${clients.length}`);
-
-    res.status(200).json(clients);
+    res.status(200).json({ clients });
   } catch (error) {
-    console.error('Error performing advanced search:', error);
+    console.error('Error in advanced search:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+// Utility function to map category name to its Mongoose model
+const getCategoryModel = (category) => {
+  switch (category) {
+    case 'Customers':
+      return Customer;
+    case 'Service Providers':
+      return ServiceProvider;
+    case 'Manufacturers':
+      return Manufacturer;
+    case 'Channel Partners':
+      return ChannelPartner;
+    case 'Investors':
+      return Investor;
+    case 'Domain Experts':
+      return DomainExpert;
+    default:
+      throw new Error('Invalid category');
+  }
+};
+
+
+// advanced search filter api 
+// app.post('/advanced-search', async (req, res) => {
+//   const { searchFields } = req.body;
+
+//   try {
+//     let clients;
+
+//     // Log the incoming searchFields to ensure they're being received correctly
+//     console.log(`Search fields: ${searchFields}`);
+
+//     const searchCriteria = searchFields.map(field => {
+//       if (field === 'customer') {
+//         return {
+//           $or: [
+//             { 'customer.project.titles': { $exists: true, $not: { $size: 0 } } },
+//             { 'customer.service.lookingFor': { $exists: true, $not: { $size: 0 } } },
+//             { 'customer.product.title': { $exists: true, $ne: "" } },
+//             { 'customer.solution.titles': { $exists: true, $not: { $size: 0 } } },
+//             { 'customer.others.titles': { $exists: true, $not: { $size: 0 } } }
+//           ]
+//         };
+//       } else if (field === 'serviceProvider') {
+//         return { 'serviceProvider.domain': { $exists: true, $not: { $size: 0 } } };
+//       } else if (field === 'manufacturer') {
+//         return { 'manufacturer.manufacturerdomain': { $exists: true, $ne: "" } };
+//       } else if (field === 'channelPartner') {
+//         return { 'channelPartner.channeldomain': { $exists: true, $ne: "" } };
+//       } else if (field === 'investor') {
+//         return { 'investor.domain': { $exists: true, $ne: "" } };
+//       } else if (field === 'domainExpert') {
+//         return { 'domainExpert.domaintitle': { $exists: true, $ne: "" } };
+//       }
+//     });
+
+//     // Log the search criteria
+//     console.log(`Search criteria: ${JSON.stringify(searchCriteria)}`);
+
+//     clients = await Client.find({ $or: searchCriteria });
+
+//     // Log the clients found
+//     console.log(`Clients found: ${clients.length}`);
+
+//     res.status(200).json(clients);
+//   } catch (error) {
+//     console.error('Error performing advanced search:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 
 // Endpoint to create a new MoM
 router.post('/api/mom', async (req, res) => {
