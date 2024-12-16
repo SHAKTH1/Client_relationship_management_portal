@@ -209,117 +209,130 @@ document.addEventListener('DOMContentLoaded', () => {
     const domainSearchInput = document.getElementById('domainSearchInput');
     const domainDropdown = document.getElementById('domainDropdown');
     const searchButton = document.getElementById('searchButton');
-    const resultsContainer = document.getElementById('searchResults'); // Add this element in your HTML
-  
+    const resultsContainer = document.getElementById('searchResults'); // Results container
+
     // Domain List
     const domains = [
-      "Health Care", "Food", "Agriculture", "IT Software", "Electronics", "Government Agencies", 
-      "NGO", "Investors", "Civil Infrastructure", "Future Mobility", "Fintech", "Architecture",
-      "Interior Design", "Real Estate", "Education", "Biotech", "Bio Informatics", "Electrical",
-      "Semiconductors", "Corporate", "MNC", "Promoters", "B2B", "Designers", "IT Hardware",
-      "Manufacturer", "Researcher", "Others", "Scientist", "Defence", "Energy", "Telecommunications",
-      "Retail", "Banking", "E-commerce", "Marketing", "Logistics", "Aerospace", "Automotive",
-      "Healthcare IT", "Pharmaceuticals", "Cybersecurity", "Data Analytics", "Machine Learning",
-      "AI & Robotics", "Climate Tech", "Blockchain", "Smart Cities", "SaaS", "Insurance",
-      "Investment Banking", "Capital Markets", "Venture Capital", "Environmental", "Public Relations",
-      "Hospitality", "Entertainment", "Media & Journalism", "Consumer Goods", "Textile", "Legal",
-      "Human Resources", "Renewable Energy", "Mining", "Chemical Industry", "Apparel & Fashion",
-      "Social Services", "Transportation", "Maritime", "Photography", "Construction",
-      "Waste Management", "Animal Health", "Luxury Goods", "Tourism", "Oceanography",
-      "Nanotechnology", "Personal Finance", "Behavioral Science", "Human Rights",
-      "Urban Development", "Renewable Resources", "Drone Technology", "Augmented Reality",
-      "Virtual Reality", "Gaming", "Event Management", "Pension Funds", "Agritech",
-      "Health Informatics", "Ocean Conservation", "Culinary Arts", "Consumer Electronics",
-      "Digital Marketing", "Product Development", "Sustainable Development", "Home Automation",
-      "Agronomy", "Biometrics", "Material Science", "Petroleum Engineering", "Music Production",
-      "Veterinary Sciences", "Clinical Trials", "Public Policy", "Optics & Photonics",
-      "Home Security", "Forestry", "Speech Recognition", "Smart Manufacturing", "Genetics",
-      "Hydrology", "Microbiology", "Neurology", "Renewable Infrastructure", "Hydrogen Technology",
-      "Biofuel", "Sports Science", "Telemedicine", "Telecommunications Equipment", "Child Welfare",
-      "Behavioral Analytics"
+        "Health Care", "Food", "Agriculture", "IT Software", "Electronics", "Government Agencies", 
+        "NGO", "Investors", "Civil Infrastructure", "Future Mobility", "Fintech", "Architecture",
+        "Interior Design", "Real Estate", "Education", "Biotech", "Bio Informatics", "Electrical",
+        "Semiconductors", "Corporate", "MNC", "Promoters", "B2B", "Designers", "IT Hardware",
+        "Manufacturer", "Researcher", "Others", "Scientist", "Defence", "Energy", "Telecommunications",
+        "Retail", "Banking", "E-commerce", "Marketing", "Logistics", "Aerospace", "Automotive",
+        "Healthcare IT", "Pharmaceuticals", "Cybersecurity", "Data Analytics", "Machine Learning",
+        "AI & Robotics", "Climate Tech", "Blockchain", "Smart Cities", "SaaS", "Insurance",
+        "Investment Banking", "Capital Markets", "Venture Capital", "Environmental", "Public Relations",
+        "Hospitality", "Entertainment", "Media & Journalism", "Consumer Goods", "Textile", "Legal",
+        "Human Resources", "Renewable Energy", "Mining", "Chemical Industry", "Apparel & Fashion",
+        "Social Services", "Transportation", "Maritime", "Photography", "Construction",
+        "Waste Management", "Animal Health", "Luxury Goods", "Tourism", "Oceanography",
+        "Nanotechnology", "Personal Finance", "Behavioral Science", "Human Rights",
+        "Urban Development", "Renewable Resources", "Drone Technology", "Augmented Reality",
+        "Virtual Reality", "Gaming", "Event Management", "Pension Funds", "Agritech",
+        "Health Informatics", "Ocean Conservation", "Culinary Arts", "Consumer Electronics",
+        "Digital Marketing", "Product Development", "Sustainable Development", "Home Automation",
+        "Agronomy", "Biometrics", "Material Science", "Petroleum Engineering", "Music Production",
+        "Veterinary Sciences", "Clinical Trials", "Public Policy", "Optics & Photonics",
+        "Home Security", "Forestry", "Speech Recognition", "Smart Manufacturing", "Genetics",
+        "Hydrology", "Microbiology", "Neurology", "Renewable Infrastructure", "Hydrogen Technology",
+        "Biofuel", "Sports Science", "Telemedicine", "Telecommunications Equipment", "Child Welfare",
+        "Behavioral Analytics"
     ];
-  
-    // Open modal
-    advancedSearchButton.addEventListener('click', () => {
-      advancedSearchModal.classList.remove('hidden');
-    });
-  
-    // Close modal
-    closeAdvancedSearchModal.addEventListener('click', () => {
-      advancedSearchModal.classList.add('hidden');
-    });
-  
+
     // Populate initial domain dropdown
     const populateDropdown = (list) => {
-      domainDropdown.innerHTML = list.map(domain => `<option value="${domain}">${domain}</option>`).join('');
+        domainDropdown.innerHTML = list.map(domain => `<option value="${domain}">${domain}</option>`).join('');
     };
-    populateDropdown(domains);
-  
+
+    // Open modal
+    advancedSearchButton.addEventListener('click', () => {
+        resetAdvancedSearch(); // Reset form and results
+        advancedSearchModal.classList.remove('hidden');
+    });
+
+    // Close modal (button click)
+    closeAdvancedSearchModal.addEventListener('click', () => {
+        advancedSearchModal.classList.add('hidden');
+        resetAdvancedSearch();
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+        if (event.target === advancedSearchModal.parentElement) {
+            advancedSearchModal.classList.add('hidden');
+            resetAdvancedSearch();
+        }
+    });
+
     // Filter dropdown options based on input
     domainSearchInput.addEventListener('input', (event) => {
-      const searchText = event.target.value.toLowerCase();
-      const filteredDomains = domains.filter(domain => domain.toLowerCase().includes(searchText));
-      populateDropdown(filteredDomains);
+        const searchText = event.target.value.toLowerCase();
+        const filteredDomains = domains.filter(domain => domain.toLowerCase().includes(searchText));
+        populateDropdown(filteredDomains);
     });
-  
+
     // Search button logic
     searchButton.addEventListener('click', async () => {
-      const selectedCategory = document.querySelector('input[name="category"]:checked')?.value;
-      const selectedDomain = domainDropdown.value;
-  
-      // Relaxed validation: Allow searches with either category or domain selected
-      if (!selectedCategory && !selectedDomain) {
-        alert('Please select at least one category or domain.');
-        return;
-      }
-  
-      const requestBody = {
-        category: selectedCategory || null,
-        domain: selectedDomain || null,
-      };
-  
-      try {
-        const response = await fetch('/api/advanced-search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to fetch search results');
+        const selectedCategory = document.querySelector('input[name="category"]:checked')?.value;
+        const selectedDomain = domainDropdown.value;
+
+        const requestBody = {
+            category: selectedCategory || null,
+            domain: selectedDomain || null,
+        };
+
+        console.log('Sending request with:', requestBody);
+
+        try {
+            const response = await fetch('/api/advanced-search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (!response.ok) throw new Error('Error fetching search results.');
+
+            const { clients } = await response.json();
+            console.log('Received search results:', clients);
+
+            // Display search results
+            displaySearchResults(clients);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while performing the search.');
         }
-  
-        const { clients } = await response.json();
-        console.log('Search Results:', clients);
-  
-        // Display results dynamically
-        displaySearchResults(clients);
-      } catch (error) {
-        console.error('Error in advanced search:', error);
-        alert('An error occurred while performing the search. Please try again.');
-      }
     });
-  
+
     // Function to display search results
     const displaySearchResults = (clients) => {
-      if (!clients.length) {
-        resultsContainer.innerHTML = '<p>No results found for the selected criteria.</p>';
-        return;
-      }
-  
-      resultsContainer.innerHTML = clients
-        .map(
-          (client) => `
-        <div class="result-item border p-4 rounded-md shadow-md mb-4">
-          <h4 class="text-lg font-semibold">${client.name}</h4>
-          <p>Domain: ${client.domain}</p>
-          <p>Category: ${client.category || 'N/A'}</p>
-        </div>`
-        )
-        .join('');
+        if (!clients.length) {
+            resultsContainer.innerHTML = '<p>No results found for the selected criteria.</p>';
+            return;
+        }
+
+        resultsContainer.innerHTML = clients
+            .map((client) => `
+                <div class="result-item">
+                    <h4>${client.name || 'Name not available'}</h4>
+                    <p><strong>Domain:</strong> ${client.domain || 'Domain not specified'}</p>
+                    <p><strong>Category:</strong> ${client.category || 'Category not applicable'}</p>
+                </div>
+            `)
+            .join('');
     };
-  });
-  
+
+    // Reset the form and results
+    const resetAdvancedSearch = () => {
+        document.querySelectorAll('input[name="category"]').forEach((radio) => (radio.checked = false));
+        domainSearchInput.value = ''; // Clear the input field
+        populateDropdown(domains); // Repopulate the dropdown with default list
+        resultsContainer.innerHTML = ''; // Clear previous search results
+    };
+
+    // Initial population of the dropdown
+    populateDropdown(domains);
+});
+
  // Function to open the image popup with the clicked image
  function openImagePopup(imageUrl) {
     const imagePopup = document.getElementById('imagePopup');

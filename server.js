@@ -1576,25 +1576,32 @@ app.post('/api/advanced-search', async (req, res) => {
     let clients = [];
 
     if (domain && !category) {
-      // Case 1: Search by domain
+      // Case 1: Search by domain only
+      console.log(`Searching clients by domain: ${domain}`);
       clients = await Client.find({ domain });
     } else if (!domain && category) {
-      // Case 2: Search by category
-      const categoryModel = getCategoryModel(category); // Utility function to get the correct model
-      clients = await categoryModel.find();
+      // Case 2: Search by category only
+      console.log(`Searching by category: ${category}`);
+      const categoryModel = getCategoryModel(category); // Get the correct model
+      const categoryData = await categoryModel.find().populate('clientId');
+      clients = categoryData.map((item) => ({
+        name: item.companyName || 'N/A',
+        domain: item.investordomain || 'N/A',
+        category,
+      }));
     } else if (domain && category) {
-      // Case 3: Search by both
+      // Case 3: Search by both domain and category
+      console.log(`Searching by both domain: ${domain} and category: ${category}`);
       const categoryModel = getCategoryModel(category);
-      const categoryData = await categoryModel.find({ domain });
-
-      const categoryClientIds = categoryData.map((item) => item.clientId); // Assuming a `clientId` field links to the `clients` collection
-
-      clients = await Client.find({
-        domain,
-        _id: { $in: categoryClientIds }, // Match both domain and linked client ID
-      });
+      const categoryData = await categoryModel.find({ investordomain: domain }).populate('clientId');
+      clients = categoryData.map((item) => ({
+        name: item.companyName || 'N/A',
+        domain: item.investordomain || 'N/A',
+        category,
+      }));
     }
 
+    console.log('Search results:', clients);
     res.status(200).json({ clients });
   } catch (error) {
     console.error('Error in advanced search:', error);
@@ -1621,6 +1628,9 @@ const getCategoryModel = (category) => {
       throw new Error('Invalid category');
   }
 };
+
+
+
 
 
 // advanced search filter api 
