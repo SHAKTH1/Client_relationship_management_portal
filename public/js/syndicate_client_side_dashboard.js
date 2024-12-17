@@ -93,9 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error fetching syndicate clients:', error);
     }
   }
-  
-
-  
+    
   // Populate the client table with data and include serial number column
   function populateTable(clients) {
     const tableBody = document.getElementById('client-table-body');
