@@ -2087,27 +2087,30 @@ router.get('/api/visit-history', async (req, res) => {
           const client = await Client.findById(visit.clientId);
           if (!client) {
             console.warn('No client found for visit:', visit._id);
-            return { ...visit.toObject(), clientId: null }; // Gracefully handle missing clients
+            return { ...visit.toObject(), clientId: null };
           }
+
           return { 
-            ...visit.toObject(), 
+            ...visit.toObject(),
             clientId: client,
-            hereToMeet: visit.hereToMeet, // Include the 'hereToMeet' field
-            agenda: visit.agenda // Include the 'agenda' field
+            hereToMeet: visit.hereToMeet,
+            agenda: visit.agenda,
+            personReferred: client.personReferred // Fetch `personReferred` field
           };
         } catch (err) {
           console.error('Error populating client data for visit:', visit._id, err);
-          return { ...visit.toObject(), clientId: null }; // Handle errors gracefully
+          return { ...visit.toObject(), clientId: null };
         }
       })
     );
 
-    res.status(200).json({ success: true, visits: populatedVisits });
-  } catch (error) {
-    console.error('Error fetching visit history:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch visit history.' });
+    res.json({ success: true, visits: populatedVisits });
+  } catch (err) {
+    console.error('Error fetching visit history:', err);
+    res.status(500).json({ success: false, message: 'Error fetching visit history.' });
   }
 });
+
 
 
 cron.schedule('0 * * * *', async () => { // Runs every hour on the hour

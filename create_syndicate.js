@@ -43,7 +43,10 @@ async function main() {
       // { user_id: '106', syndicateName: 'Vishal_Rao', password: 'vishal@123', designation: 'Strategy Partner' },
       // { user_id: '107', syndicateName: 'others', password: 'others', designation: 'Strategy Partner' },
       // { user_id: '108', syndicateName: 'Vidya', password: 'vidya@123', designation: 'Strategy Partner' }
-      { user_id: '109', syndicateName: 'Visitors', password: 'visitors', designation: 'visitors' }
+      //{ user_id: '110', syndicateName: 'Beq', password: 'beq', designation: 'beq'}
+       { user_id: '111', syndicateName: 'xcentric', password: 'xcentric', designation: 'xcentric' }
+       
+      
       
 
     ];

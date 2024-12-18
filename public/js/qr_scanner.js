@@ -67,28 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    // Display visit history based on date categories
     function displayHistory(visits) {
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
-
+    
         const historySections = {
             today: [],
             yesterday: [],
             thisWeek: [],
             thisMonth: []
         };
-
+    
         // Categorize visits
         visits.forEach(visit => {
-            // Skip visits with null or missing clientId
-            if (!visit.clientId || !visit.checkInTime) {
-                return;
-            }
-
+            if (!visit.clientId || !visit.checkInTime) return;
+    
             const visitDate = new Date(visit.checkInTime);
-
+    
             if (isSameDate(visitDate, today)) {
                 historySections.today.push(visit);
             } else if (isSameDate(visitDate, yesterday)) {
@@ -99,16 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 historySections.thisMonth.push(visit);
             }
         });
-
+    
         // Render history sections
         const historyList = document.getElementById('history-list');
-        historyList.innerHTML = ''; // Clear previous history
-
+        historyList.innerHTML = '';
+    
         Object.keys(historySections).forEach(section => {
             if (historySections[section].length > 0) {
                 historyList.innerHTML += `<h3 class="text-xl mt-4">${capitalizeFirstLetter(section)}</h3>`;
                 historySections[section].forEach(visit => {
-                    // Add an additional check to ensure clientId has the necessary properties
                     if (visit.clientId && visit.clientId.name) {
                         historyList.innerHTML += `
                         <div class="border p-2 mt-2">
@@ -119,15 +114,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p><strong>Check-out:</strong> ${visit.checkOutTime ? new Date(visit.checkOutTime).toLocaleString() : 'N/A'}</p>
                             <p><strong>Here to meet:</strong> ${visit.hereToMeet}</p>
                             <p><strong>Agenda:</strong> ${visit.agenda}</p>
+                            <p><strong>Person Referred:</strong> ${visit.personReferred || 'N/A'}</p>
                         </div>
                     `;
-                    
                     }
                 });
             }
         });
     }
-
+    
     // Utility functions
     function isSameDate(date1, date2) {
         return date1.getDate() === date2.getDate() &&
