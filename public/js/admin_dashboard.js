@@ -139,9 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="p-2">${serialNumber}</td> <!-- Serial Number Column -->
-                <td class="py-2 px-4">
-                    <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;" onclick="openImagePopup('${faceImageUrl}')">
-                </td>
+
+                <td class="py-2 px-4" style="text-align: center; vertical-align: middle;">
+    <img src="${faceImageUrl}" alt="Profile" 
+         class="profile-img" 
+         style="width: 50px; height: 50px; border-radius: 50%; display: inline-block;" 
+         onclick="openImagePopup('${faceImageUrl}')">
+</td>
+
                 <td class="p-2">${visitor.name}</td>
                 <td class="p-2">${formattedDate}</td>
                 <td class="p-2">${visitor.companyName || 'N/A'}</td>
@@ -389,170 +394,170 @@ document.addEventListener('DOMContentLoaded', () => {
     
     
     // Initialize qualified lead page
-    function initQualifiedLeadPage(status) {
-        showContent('content-qualified-lead');
-        populateQualifiedLeadTable(status);
-    }
+    // function initQualifiedLeadPage(status) {
+    //     showContent('content-qualified-lead');
+    //     populateQualifiedLeadTable(status);
+    // }
 
     // Function to render qualified leads in the table
-    async function populateQualifiedLeadTable(status) {
-        const tableBody = document.getElementById('qualifiedLeadTableBody');
-        if (!tableBody) {
-            console.error('Table body with ID "qualifiedLeadTableBody" not found.');
-            return;
-        }
+    // async function populateQualifiedLeadTable(status) {
+    //     const tableBody = document.getElementById('qualifiedLeadTableBody');
+    //     if (!tableBody) {
+    //         console.error('Table body with ID "qualifiedLeadTableBody" not found.');
+    //         return;
+    //     }
 
-        const token = localStorage.getItem('adminToken');
-        try {
-            console.log('Fetching qualified leads with status:', status);
-            const response = await fetch(`/api/clients?status=${status}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+    //     const token = localStorage.getItem('adminToken');
+    //     try {
+    //         console.log('Fetching qualified leads with status:', status);
+    //         const response = await fetch(`/api/clients?status=${status}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`
+    //             }
+    //         });
 
-            if (response.ok) {
-                const qualifiedLeads = await response.json();
-                renderQualifiedLeads(qualifiedLeads);
-            } else {
-                console.error('Error fetching qualified leads');
-            }
-        } catch (error) {
-            console.error('Error fetching qualified leads:', error);
-        }
-    }
+    //         if (response.ok) {
+    //             const qualifiedLeads = await response.json();
+    //             renderQualifiedLeads(qualifiedLeads);
+    //         } else {
+    //             console.error('Error fetching qualified leads');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching qualified leads:', error);
+    //     }
+    // }
 
-    function renderQualifiedLeads(qualifiedLeads) {
-        const tableBody = document.getElementById('qualifiedLeadTableBody');
-        tableBody.innerHTML = ''; // Clear existing rows
-        qualifiedLeads.forEach((lead, index) => {
-            const createdAt = new Date(lead.createdAt);
-            const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()}`;
+//     function renderQualifiedLeads(qualifiedLeads) {
+//         const tableBody = document.getElementById('qualifiedLeadTableBody');
+//         tableBody.innerHTML = ''; // Clear existing rows
+//         qualifiedLeads.forEach((lead, index) => {
+//             const createdAt = new Date(lead.createdAt);
+//             const formattedDate = `${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getMonth() + 1).padStart(2, '0')}/${createdAt.getFullYear()}`;
     
-            // Use lead's faceImage if available, otherwise use a placeholder image
-            const faceImageUrl = lead.faceImage ? `/images/${lead.faceImage}` : 'https://via.placeholder.com/80';
+//             // Use lead's faceImage if available, otherwise use a placeholder image
+//             const faceImageUrl = lead.faceImage ? `/images/${lead.faceImage}` : 'https://via.placeholder.com/80';
             
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="py-2 px-4">
-                    <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;">
-                </td>
-                <td class="p-2">${lead.name}</td>
-                <td class="p-2">${formattedDate}</td>
-                <td class="p-2">${lead.companyName || 'N/A'}</td>
-                <td class="p-2">${lead.phone}</td>
-                <td class="p-2">${lead.email}</td>
-                <td class="p-2">
-                    <select id="lead-status-${index}" class="bg-gray-700 p-1 rounded" data-lead-id="${lead._id}">
-                        <option value="qualified" ${lead.status === 'qualified' ? 'selected' : ''}>Qualified</option>
-                        <option value="on-hold" ${lead.status === 'on-hold' ? 'selected' : ''}>On Hold</option>
-                        <option value="not-relevant" ${lead.status === 'not-relevant' ? 'selected' : ''}>Not Relevant</option>
-                    </select>
-                </td>
-                <td class="p-2">
-                    ${lead.status === 'qualified' ? `
-                        <button class="add-fields-button" data-lead-id="${lead._id}" style="margin-right: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Add Fields</button>
-                    ` : ''}
-                    <button class="lead-save-button" data-lead-id="${lead._id}" style="padding: 5px 10px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Save</button>
-                    <button class="go-to-mom-button" data-lead-id="${lead._id}" style="padding: 5px 10px; background-color: #FF9800; color: white; border: none; border-radius: 4px; cursor: pointer;">LOG_MOM</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
+//             const row = document.createElement('tr');
+//             row.innerHTML = `
+//                 <td class="py-2 px-4">
+//                     <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;">
+//                 </td>
+//                 <td class="p-2">${lead.name}</td>
+//                 <td class="p-2">${formattedDate}</td>
+//                 <td class="p-2">${lead.companyName || 'N/A'}</td>
+//                 <td class="p-2">${lead.phone}</td>
+//                 <td class="p-2">${lead.email}</td>
+//                 <td class="p-2">
+//                     <select id="lead-status-${index}" class="bg-gray-700 p-1 rounded" data-lead-id="${lead._id}">
+//                         <option value="qualified" ${lead.status === 'qualified' ? 'selected' : ''}>Qualified</option>
+//                         <option value="on-hold" ${lead.status === 'on-hold' ? 'selected' : ''}>On Hold</option>
+//                         <option value="not-relevant" ${lead.status === 'not-relevant' ? 'selected' : ''}>Not Relevant</option>
+//                     </select>
+//                 </td>
+//                 <td class="p-2">
+//                     ${lead.status === 'qualified' ? `
+//                         <button class="add-fields-button" data-lead-id="${lead._id}" style="margin-right: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Add Fields</button>
+//                     ` : ''}
+//                     <button class="lead-save-button" data-lead-id="${lead._id}" style="padding: 5px 10px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">Save</button>
+//                     <button class="go-to-mom-button" data-lead-id="${lead._id}" style="padding: 5px 10px; background-color: #FF9800; color: white; border: none; border-radius: 4px; cursor: pointer;">LOG_MOM</button>
+//                 </td>
+//             `;
+//             tableBody.appendChild(row);
+//         });
     
     
-        // Add event listeners to "Add Fields" buttons
-        document.querySelectorAll('.add-fields-button').forEach(button => {
-            button.addEventListener('click', function(event) {
-                const leadId = event.target.dataset.leadId;
-                localStorage.setItem('leadId', leadId);
-                window.location.href = `/profile_data_entry.html?leadId=${leadId}`;
-            });
-        });
+//         // Add event listeners to "Add Fields" buttons
+//         document.querySelectorAll('.add-fields-button').forEach(button => {
+//             button.addEventListener('click', function(event) {
+//                 const leadId = event.target.dataset.leadId;
+//                 localStorage.setItem('leadId', leadId);
+//                 window.location.href = `/profile_data_entry.html?leadId=${leadId}`;
+//             });
+//         });
     
-        // Add event listeners to "Go to MoM" buttons
-document.querySelectorAll('.go-to-mom-button').forEach(button => {
-    button.addEventListener('click', function(event) {
-        const leadId = event.target.dataset.leadId;
-        localStorage.setItem('leadId', leadId);
-        window.location.href = `/mom.html?leadId=${leadId}`;
-    });
-});
+//         // Add event listeners to "Go to MoM" buttons
+// document.querySelectorAll('.go-to-mom-button').forEach(button => {
+//     button.addEventListener('click', function(event) {
+//         const leadId = event.target.dataset.leadId;
+//         localStorage.setItem('leadId', leadId);
+//         window.location.href = `/mom.html?leadId=${leadId}`;
+//     });
+// });
 
     
 
-        // Add event listeners to save buttons
-        document.querySelectorAll('.lead-save-button').forEach(button => {
-            button.addEventListener('click', async (event) => {
-                const leadId = event.target.dataset.leadId;
-                // Find the select element by its unique ID
-                const selectElement = document.querySelector(`select[data-lead-id="${leadId}"]`);
-                if (!selectElement) {
-                    console.error('Select element not found for leadId:', leadId);
-                    return;
-                }
-                const newStatus = selectElement.value;
-                try {
-                    const response = await fetch(`/clients/${leadId}/status`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                        },
-                        body: JSON.stringify({ status: newStatus })
-                    });
-                    if (response.ok) {
-                        alert('Status updated successfully');
-                    } else {
-                        console.error('Error updating status');
-                    }
-                } catch (error) {
-                    console.error('Error updating status:', error);
-                }
-            });
-        });
-    }
+//         // Add event listeners to save buttons
+//         document.querySelectorAll('.lead-save-button').forEach(button => {
+//             button.addEventListener('click', async (event) => {
+//                 const leadId = event.target.dataset.leadId;
+//                 // Find the select element by its unique ID
+//                 const selectElement = document.querySelector(`select[data-lead-id="${leadId}"]`);
+//                 if (!selectElement) {
+//                     console.error('Select element not found for leadId:', leadId);
+//                     return;
+//                 }
+//                 const newStatus = selectElement.value;
+//                 try {
+//                     const response = await fetch(`/clients/${leadId}/status`, {
+//                         method: 'PUT',
+//                         headers: {
+//                             'Content-Type': 'application/json',
+//                             'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+//                         },
+//                         body: JSON.stringify({ status: newStatus })
+//                     });
+//                     if (response.ok) {
+//                         alert('Status updated successfully');
+//                     } else {
+//                         console.error('Error updating status');
+//                     }
+//                 } catch (error) {
+//                     console.error('Error updating status:', error);
+//                 }
+//             });
+//         });
+//     }
 
 
-    // Set up sidebar dropdown for Qualified Leads
-    function setupQualifiedLeadsDropdown() {
-        const qualifiedLeadItem = document.getElementById('nav-qualified-lead');
-        if (!qualifiedLeadItem) {
-            console.error('Element with ID "nav-qualified-lead" not found.');
-            return;
-        }
-        qualifiedLeadItem.classList.add('has-submenu');
+//     // Set up sidebar dropdown for Qualified Leads
+//     function setupQualifiedLeadsDropdown() {
+//         const qualifiedLeadItem = document.getElementById('nav-qualified-lead');
+//         if (!qualifiedLeadItem) {
+//             console.error('Element with ID "nav-qualified-lead" not found.');
+//             return;
+//         }
+//         qualifiedLeadItem.classList.add('has-submenu');
 
-        const submenu = document.createElement('ul');
-        submenu.className = 'pl-4 mt-2 space-y-2 hidden';
-        submenu.innerHTML = `
-            <li id="nav-qualified-lead-qualified" class="cursor-pointer">Qualified</li>
-            <li id="nav-qualified-lead-on-hold" class="cursor-pointer">On Hold</li>
-            <li id="nav-qualified-lead-not-relevant" class="cursor-pointer">Not Relevant</li>
-        `;
+//         const submenu = document.createElement('ul');
+//         submenu.className = 'pl-4 mt-2 space-y-2 hidden';
+//         submenu.innerHTML = `
+//             <li id="nav-qualified-lead-qualified" class="cursor-pointer">Qualified</li>
+//             <li id="nav-qualified-lead-on-hold" class="cursor-pointer">On Hold</li>
+//             <li id="nav-qualified-lead-not-relevant" class="cursor-pointer">Not Relevant</li>
+//         `;
 
-        qualifiedLeadItem.appendChild(submenu);
+//         qualifiedLeadItem.appendChild(submenu);
 
-        qualifiedLeadItem.addEventListener('click', function(e) {
-            e.stopPropagation();
-            submenu.classList.toggle('hidden');
-        });
+//         qualifiedLeadItem.addEventListener('click', function(e) {
+//             e.stopPropagation();
+//             submenu.classList.toggle('hidden');
+//         });
 
-        ['qualified', 'on-hold', 'not-relevant'].forEach(status => {
-            const element = document.getElementById(`nav-qualified-lead-${status}`);
-            if (element) {
-                element.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    initQualifiedLeadPage(status);
-                });
-            } else {
-                console.error(`Element with ID "nav-qualified-lead-${status}" not found.`);
-            }
-        });
-    }
+//         ['qualified', 'on-hold', 'not-relevant'].forEach(status => {
+//             const element = document.getElementById(`nav-qualified-lead-${status}`);
+//             if (element) {
+//                 element.addEventListener('click', function(e) {
+//                     e.stopPropagation();
+//                     initQualifiedLeadPage(status);
+//                 });
+//             } else {
+//                 console.error(`Element with ID "nav-qualified-lead-${status}" not found.`);
+//             }
+//         });
+//     }
 
-    setupQualifiedLeadsDropdown();
+//     setupQualifiedLeadsDropdown();
 });
 
 
@@ -891,159 +896,161 @@ function setProgress(element, percent) {
 
 
 // Populate business proposal table
-function populateBusinessProposalTable() {
-    const tableBody = document.getElementById('businessProposalTableBody');
-    const token = localStorage.getItem('adminToken');
+// function populateBusinessProposalTable() {
+//     const tableBody = document.getElementById('businessProposalTableBody');
+//     const token = localStorage.getItem('adminToken');
     
-    fetch('/api/clients?status=qualified', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        tableBody.innerHTML = ''; // Clear existing rows
-        data.forEach((proposal, index) => {
-            // Use proposal's faceImage if available, otherwise use a placeholder image
-            const faceImageUrl = proposal.faceImage ? `/images/${proposal.faceImage}` : 'https://via.placeholder.com/80';
+//     fetch('/api/clients?status=qualified', {
+//         headers: {
+//             'Authorization': `Bearer ${token}`,
+//             'Content-Type': 'application/json'
+//         }
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         tableBody.innerHTML = ''; // Clear existing rows
+//         data.forEach((proposal, index) => {
+//             // Use proposal's faceImage if available, otherwise use a placeholder image
+//             const faceImageUrl = proposal.faceImage ? `/images/${proposal.faceImage}` : 'https://via.placeholder.com/80';
             
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="py-2 px-4">
-                    <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;">
-                </td>
-                <td class="p-2">${proposal.name}</td>
-                <td class="p-2">${formatDate(proposal.createdAt)}</td>
-                <td class="p-2">${proposal.companyName}</td>
-                <td class="p-2">${proposal.phone}</td>
-                <td class="p-2">${proposal.email}</td>
-                <td class="p-2">
-                    <button class="make-proposal-button text-blue-400 hover:text-blue-300" data-proposal-id="${proposal._id}">Make Proposal</button>
-                </td>
-                <td class="p-2 ${getStatusColor(proposal.buisnessproposalstatus)}">
-                    <select id="status-${index}" class="bg-gray-700 p-1 rounded" data-proposal-id="${proposal._id}">
-                        <option value="Accepted" ${proposal.buisnessproposalstatus === 'Accepted' ? 'selected' : ''}>Accepted</option>
-                        <option value="In Progress" ${proposal.buisnessproposalstatus === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                        <option value="In Discussion" ${proposal.buisnessproposalstatus === 'In Discussion' ? 'selected' : ''}>In Discussion</option>
-                        <option value="Offered" ${proposal.buisnessproposalstatus === 'Offered' ? 'selected' : ''}>Offered</option>
-                    </select>
-                </td>
-                <td class="p-2">
-                    <button class="save-button " data-proposal-id="${proposal._id}" >Save</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
+//             const row = document.createElement('tr');
+//             row.innerHTML = `
+//                 <td class="py-2 px-4">
+//                     <img src="${faceImageUrl}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;">
+//                 </td>
+//                 <td class="p-2">${proposal.name}</td>
+//                 <td class="p-2">${formatDate(proposal.createdAt)}</td>
+//                 <td class="p-2">${proposal.companyName}</td>
+//                 <td class="p-2">${proposal.phone}</td>
+//                 <td class="p-2">${proposal.email}</td>
+//                 <td class="p-2">
+//                     <button class="make-proposal-button text-blue-400 hover:text-blue-300" data-proposal-id="${proposal._id}">Make Proposal</button>
+//                 </td>
+//                 <td class="p-2 ${getStatusColor(proposal.buisnessproposalstatus)}">
+//                     <select id="status-${index}" class="bg-gray-700 p-1 rounded" data-proposal-id="${proposal._id}">
+//                         <option value="Accepted" ${proposal.buisnessproposalstatus === 'Accepted' ? 'selected' : ''}>Accepted</option>
+//                         <option value="In Progress" ${proposal.buisnessproposalstatus === 'In Progress' ? 'selected' : ''}>In Progress</option>
+//                         <option value="In Discussion" ${proposal.buisnessproposalstatus === 'In Discussion' ? 'selected' : ''}>In Discussion</option>
+//                         <option value="Offered" ${proposal.buisnessproposalstatus === 'Offered' ? 'selected' : ''}>Offered</option>
+//                     </select>
+//                 </td>
+//                 <td class="p-2">
+//                     <button class="save-button " data-proposal-id="${proposal._id}" >Save</button>
+//                 </td>
+//             `;
+//             tableBody.appendChild(row);
+//         });
 
-           // Add event listener to all Make Proposal buttons
-           document.querySelectorAll('.make-proposal-button').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const proposalId = event.target.getAttribute('data-proposal-id');
-                localStorage.setItem('proposalId', proposalId);
-                window.location.href = 'buisness_proposal_entry.html';
-            });
-        });
+//            // Add event listener to all Make Proposal buttons
+//            document.querySelectorAll('.make-proposal-button').forEach(button => {
+//             button.addEventListener('click', (event) => {
+//                 const proposalId = event.target.getAttribute('data-proposal-id');
+//                 localStorage.setItem('proposalId', proposalId);
+//                 window.location.href = 'buisness_proposal_entry.html';
+//             });
+//         });
         
 
-  // Add event listeners to save buttons
-document.querySelectorAll('.save-button').forEach(button => {
-    button.addEventListener('click', async (event) => {
-        const proposalId = event.target.dataset.proposalId;
-        const selectElement = document.querySelector(`select[data-proposal-id="${proposalId}"]`);
-        const newStatus = selectElement.value;
+//   // Add event listeners to save buttons
+// document.querySelectorAll('.save-button').forEach(button => {
+//     button.addEventListener('click', async (event) => {
+//         const proposalId = event.target.dataset.proposalId;
+//         const selectElement = document.querySelector(`select[data-proposal-id="${proposalId}"]`);
+//         const newStatus = selectElement.value;
 
-        try {
-            const response = await fetch(`/api/buisness/clients/${proposalId}/status`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                },
-                body: JSON.stringify({ buisnessproposalstatus: newStatus })
-            });
-            if (response.ok) {
-                alert('Status updated successfully');
-            } else {
-                console.error('Error updating status');
-            }
-        } catch (error) {
-            console.error('Error updating status:', error);
-        }
-    });
-});
+//         try {
+//             const response = await fetch(`/api/buisness/clients/${proposalId}/status`, {
+//                 method: 'PUT',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+//                 },
+//                 body: JSON.stringify({ buisnessproposalstatus: newStatus })
+//             });
+//             if (response.ok) {
+//                 alert('Status updated successfully');
+//             } else {
+//                 console.error('Error updating status');
+//             }
+//         } catch (error) {
+//             console.error('Error updating status:', error);
+//         }
+//     });
+// });
 
-    })
-    .catch(error => {
-        console.error('Error fetching business proposals:', error);
-    });
-}
+//     })
+//     .catch(error => {
+//         console.error('Error fetching business proposals:', error);
+//     });
+// }
+
+
 // Fetch and update the counts
-function fetchBusinessProposalCounts() {
-    fetch('/api/clients/counts', {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-        }
-    })
-    .then(response => response.json())
-    .then(countData => {
-        const counts = {
-            'Accepted': 0,
-            'In Progress': 0,
-            'In Discussion': 0,
-            'Offered': 0
-        };
+// function fetchBusinessProposalCounts() {
+//     fetch('/api/clients/counts', {
+//         headers: {
+//             'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(countData => {
+//         const counts = {
+//             'Accepted': 0,
+//             'In Progress': 0,
+//             'In Discussion': 0,
+//             'Offered': 0
+//         };
 
-        countData.forEach(item => {
-            counts[item._id] = item.count;
-        });
+//         countData.forEach(item => {
+//             counts[item._id] = item.count;
+//         });
 
-        createCircleChart('acceptedClients', counts['Accepted'], '#7221FD');
-        createCircleChart('inProgressClients', counts['In Progress'], '#7221FD');
-        createCircleChart('inDiscussionClients', counts['In Discussion'], '#7221FD');
-        createCircleChart('OfferedClients', counts['Offered'], '#7221FD');
-          // Update the donut chart series
-          if (typeof ApexCharts !== 'undefined' && document.getElementById("donut-chart")) {
-            const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions(counts));
-            chart.render();
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching counts:', error);
-    });
-}
+//         createCircleChart('acceptedClients', counts['Accepted'], '#7221FD');
+//         createCircleChart('inProgressClients', counts['In Progress'], '#7221FD');
+//         createCircleChart('inDiscussionClients', counts['In Discussion'], '#7221FD');
+//         createCircleChart('OfferedClients', counts['Offered'], '#7221FD');
+//           // Update the donut chart series
+//           if (typeof ApexCharts !== 'undefined' && document.getElementById("donut-chart")) {
+//             const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions(counts));
+//             chart.render();
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error fetching counts:', error);
+//     });
+// }
 
 // Helper function to get status color
-function getStatusColor(status) {
-    switch (status) {
-        case 'Accepted':
-            return 'text-green-400';
-        case 'In Progress':
-            return 'text-yellow-400';
-        case 'In Discussion':
-            return 'text-blue-400';
-        case 'Offered':
-            return 'text-purple-400';
-        default:
-            return 'text-gray-400';
-    }
-}
+// function getStatusColor(status) {
+//     switch (status) {
+//         case 'Accepted':
+//             return 'text-green-400';
+//         case 'In Progress':
+//             return 'text-yellow-400';
+//         case 'In Discussion':
+//             return 'text-blue-400';
+//         case 'Offered':
+//             return 'text-purple-400';
+//         default:
+//             return 'text-gray-400';
+//     }
+// }
 
 // Initialize business proposal page
-function initBusinessProposalPage() {
-    showContent('content-business-proposal');
-    fetchBusinessProposalCounts();
-    populateBusinessProposalTable();
-}
+// function initBusinessProposalPage() {
+//     showContent('content-business-proposal');
+//     fetchBusinessProposalCounts();
+//     populateBusinessProposalTable();
+// }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('nav-business-proposal').addEventListener('click', initBusinessProposalPage);
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     document.getElementById('nav-business-proposal').addEventListener('click', initBusinessProposalPage);
+// });
 
 // Helper function to format date
 function formatDate(dateString) {
@@ -1513,103 +1520,136 @@ async function openSyndicateDashboard(userId) {
 document.addEventListener('DOMContentLoaded', () => {
     const dropdownButton = document.getElementById('dropdownButton');
     const dropdownMenu = document.getElementById('dropdownMenu');
-    const tableBody = document.getElementById('visitorsTableBody'); // Assuming you have a table body for client data
-    const PAGE_SIZE = 10;
+    const tableBody = document.getElementById('visitorsTableBody');
+    const paginationContainer = document.getElementById('pagination');
+    const PAGE_SIZE = 10; // Records per page
     let currentPage = 1;
+    let currentFilter = 'total'; // Default filter
 
-    // Toggle dropdown menu visibility
+    // Toggle dropdown menu
     dropdownButton.addEventListener('click', () => {
         dropdownMenu.classList.toggle('hidden');
     });
 
-    // Close dropdown when clicking outside of it
-    document.addEventListener('click', (event) => {
-        if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+    // Handle dropdown option clicks
+    dropdownMenu.addEventListener('click', (event) => {
+        const filter = event.target.getAttribute('data-filter');
+        if (filter) {
+            currentFilter = filter; // Update current filter
+            currentPage = 1; // Reset to first page
+            fetchClientData(currentFilter, currentPage);
             dropdownMenu.classList.add('hidden');
         }
     });
 
-    // Handle dropdown item click
-    dropdownMenu.addEventListener('click', (event) => {
-        const filter = event.target.getAttribute('data-filter');
-        if (filter) {
-            fetchClientData(filter, currentPage);
-            dropdownMenu.classList.add('hidden'); // Close the dropdown menu
-        }
-    });
-
-    // Function to fetch client data based on selected filter and page
+    // Fetch client data dynamically
     async function fetchClientData(filter, page = 1) {
         try {
             const response = await fetch(`/visitor-details?filter=${filter}&page=${page}&size=${PAGE_SIZE}`, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
             });
 
             if (response.ok) {
                 const data = await response.json();
                 const clients = data.visitors || [];
                 const totalCount = data.totalCount || 0;
-                populateTable(clients);
+                renderTable(clients, page);
                 renderPagination(totalCount, filter);
             } else {
-                console.error('Error fetching client data:', await response.text());
+                console.error('Error fetching data:', await response.text());
             }
         } catch (error) {
-            console.error('Error fetching client data:', error);
+            console.error('Error:', error);
         }
     }
 
-    // Populate the client table with fetched data
-    function populateTable(clients) {
-        tableBody.innerHTML = ''; // Clear existing table rows
-
+    // Render table with dynamic serial numbers
+    function renderTable(clients, page) {
+        tableBody.innerHTML = ''; // Clear table
+    
         if (clients.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4">No clients found.</td></tr>';
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center py-4">No data found for this filter.</td>
+                </tr>`;
             return;
         }
-
-        clients.forEach((client) => {
+    
+        const startSerial = (page - 1) * PAGE_SIZE; // Serial number for current page
+    
+        clients.forEach((client, index) => {
+            const serialNumber = startSerial + index + 1;
+    
+            // Stricter date validation
+            const createdAt = client.createdAt && !isNaN(Date.parse(client.createdAt))
+                ? new Date(client.createdAt).toLocaleDateString()
+                : 'N/A';
+    
             const profileImage = client.faceImage ? `/images/${client.faceImage}` : 'https://via.placeholder.com/80';
+    
             const row = `
                 <tr>
-                    <td class="py-2 px-4">
-                        <img src="${profileImage}" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <td class="p-2 text-center">${serialNumber}</td>
+                    <td class="p-2 text-center align-middle">
+                        <div class="flex justify-center items-center">
+                            <img src="${profileImage}" alt="Profile" class="rounded-full" style="width: 50px; height: 50px;">
+                        </div>
                     </td>
-                    <td class="p-2">${client.name}</td>
-                    <td class="p-2">${new Date(client.createdAt).toLocaleDateString()}</td>
-                    <td class="p-2">${client.companyName || 'N/A'}</td>
-                    <td class="p-2">${client.phone}</td>
-                    <td class="p-2">${client.email}</td>
-                    <td class="p-2">${client.status || 'N/A'}</td>
+                    <td class="p-2 align-middle text-center">${client.name || 'N/A'}</td>
+                    <td class="p-2 align-middle text-center">${createdAt}</td>
+                    <td class="p-2 align-middle text-center">${client.companyName || 'N/A'}</td>
+                    <td class="p-2 align-middle text-center">${client.phone || 'N/A'}</td>
+                    <td class="p-2 align-middle text-center">${client.email || 'N/A'}</td>
                 </tr>
             `;
             tableBody.insertAdjacentHTML('beforeend', row);
         });
     }
+    
 
-    // Render pagination buttons based on total count
+    // Render pagination dynamically
     function renderPagination(totalCount, filter) {
-        const paginationContainer = document.getElementById('pagination');
-        paginationContainer.innerHTML = ''; // Clear previous pagination buttons
-
+        paginationContainer.innerHTML = '';
         const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement('button');
-            pageButton.classList.add('px-3', 'py-1', 'rounded', 'border', 'border-gray-500', 'bg-blue-500', 'text-white');
-            pageButton.innerText = i;
-            pageButton.disabled = i === currentPage;
 
-            pageButton.onclick = () => {
+        // Previous Button
+        const prevButton = createPaginationButton('Previous', currentPage > 1, () => {
+            currentPage--;
+            fetchClientData(filter, currentPage);
+        });
+        paginationContainer.appendChild(prevButton);
+
+        // Page Buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = createPaginationButton(i, currentPage !== i, () => {
                 currentPage = i;
                 fetchClientData(filter, currentPage);
-            };
-
+            });
             paginationContainer.appendChild(pageButton);
         }
+
+        // Next Button
+        const nextButton = createPaginationButton('Next', currentPage < totalPages, () => {
+            currentPage++;
+            fetchClientData(filter, currentPage);
+        });
+        paginationContainer.appendChild(nextButton);
     }
+
+    // Utility: Create pagination button
+    function createPaginationButton(label, isEnabled, onClick) {
+        const button = document.createElement('button');
+        button.innerText = label;
+        button.classList.add('px-3', 'py-1', 'rounded', 'border', 'bg-blue-500', 'text-white', 'mx-1');
+        if (!isEnabled) button.disabled = true;
+        button.onclick = onClick;
+        return button;
+    }
+
+    // Initial load: Fetch "Total Clients" data
+    fetchClientData(currentFilter, currentPage);
 });
+
 
 

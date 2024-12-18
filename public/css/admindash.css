@@ -1,338 +1,350 @@
 Copybody { 
-    font-family: poppins, sans-serif; 
+  font-family: poppins, sans-serif; 
 }
 
 .custom-bar {
-    background: linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,0,255,1) 100%);
+  background: linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,0,255,1) 100%);
 }
-
 
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap:4%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:4%;
 }
 
-  
 .circle-chart {   
-    width: 100%;
-    max-width: 150px;
-    margin: 0 auto;
-  }
-  
-  .circle-chart canvas {
-    width: 100% !important;
-    height: auto !important;
-  }
-
-.chart-item {
-    text-align: center;
-    padding: 4%;
-    background: linear-gradient(to top, #1F2937, transparent);
-    border-radius: 0.5rem;
-    color: white !important;
+  width: 100%;
+  max-width: 150px;
+  margin: 0 auto;
 }
 
+.circle-chart canvas {
+  width: 100% !important;
+  height: auto !important;
+}
 
 .chart-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.25rem;
-    background: linear-gradient(to top, #1F2937, transparent);
-    border-radius: 0.5rem;
-    color: white !important;
+  text-align: center;
+  padding: 4%;
+  background: linear-gradient(to top, #1F2937, transparent);
+  border-radius: 0.5rem;
+  color: white !important;
+}
+
+.chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: linear-gradient(to top, #1F2937, transparent);
+  border-radius: 0.5rem;
+  color: white !important;
 }
 
 .circle-chart {
-    width: 100%;
-    max-width: 150px;
-    margin: 0 auto;
-  }
+  width: 100%;
+  max-width: 150px;
+  margin: 0 auto;
+}
 
-  .circle-chart canvas {
-    margin-left: -10%;
-    width: 120% !important;
-    height: auto !important;
-  }
+.circle-chart canvas {
+  margin-left: -10%;
+  width: 120% !important;
+  height: auto !important;
+}
 
-  @media (max-width: 640px) {
-    .text-2xl {
-      font-size: 1.5rem;
-    }
+@media (max-width: 640px) {
+  .text-2xl {
+    font-size: 1.5rem;
   }
+}
 
-  @media (max-width: 480px) {
-    .p-5 {
-      padding: 1rem;
-    }
+@media (max-width: 480px) {
+  .p-5 {
+    padding: 1rem;
   }
+}
 
 #totalClients {
-    border: none; /* Ensure there's no border */
-    background-color: transparent; /* Optional: Make sure there's no background */
+  border: none; /* Ensure there's no border */
+  background-color: transparent; /* Optional: Make sure there's no background */
 }
 
 .custom-center {
-    display: flex;
-    justify-content: center;
-    align-items: end;
+  display: flex;
+  justify-content: center;
+  align-items: end;
 }
 
 .apexcharts-datalabel-label,
 .apexcharts-text,
 .apexcharts-legend-text,
 .apexcharts-pie-label {
-    color: white !important;
+  color: white !important;
 }
 
 .custom_size{
- margin-top: -3px;
-
+margin-top: -3px;
 }
 
-
-
 .custom-size{
-    margin-top: -7px;
-    padding-bottom: 9px;
-    
+  margin-top: -7px;
+  padding-bottom: 9px;
 }
 
 .w-40 {
-    margin-top: -40px;
-    margin-left: -30px;
-    width: 10rem;
+  margin-top: -40px;
+  margin-left: -30px;
+  width: 10rem;
 }
 
 .text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-    margin-top: -15px;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  margin-top: -15px;
 }
+
 #weekClients {
-    border: none !important; /* Remove any border */
-    background-color: transparent !important; /* Ensure no background color */
+  border: none !important; /* Remove any border */
+  background-color: transparent !important; /* Ensure no background color */
 }
 
 .remove_border{
-    border: none !important;
-    border:0 px !important;
-}
-/* Custom styling for the modal */
-#searchModal .modal-content {
-  max-width: 500px;
-  margin: auto;
+  border: none !important;
+  border:0 px !important;
 }
 
-#searchModal .flex-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-#searchModal .flex-wrap div {
-  flex: 1 1 45%; /* Adjust the width of each checkbox container */
-}
-
-#searchModal label {
-  margin-left: 5px;
-  color: black;
-}
-
-Copybody { 
-    font-family: poppins, sans-serif; 
-}
-
-.custom-bar {
-    background: linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,0,255,1) 100%);
-}
-
-
+/* =================== Qualified Lead Styles =================== */
+/* Commented Out Relevant CSS */
+/*
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap:4%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:4%;
 }
-
-  
-.circle-chart {   
-    width: 100%;
-    max-width: 150px;
-    margin: 0 auto;
-  }
-  
-  .circle-chart canvas {
-    width: 100% !important;
-    height: auto !important;
-  }
 
 .chart-item {
-    text-align: center;
-    padding: 4%;
-    background: linear-gradient(to top, #1F2937, transparent);
-    border-radius: 0.5rem;
-    color: white !important;
+  text-align: center;
+  padding: 4%;
+  background: linear-gradient(to top, #1F2937, transparent);
+  border-radius: 0.5rem;
+  color: white !important;
 }
 
+.circle-chart canvas {
+  margin-left: -10%;
+  width: 120% !important;
+  height: auto !important;
+}
+*/
 
-.chart-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.25rem;
-    background: linear-gradient(to top, #1F2937, transparent);
-    border-radius: 0.5rem;
-    color: white !important;
+/* =================== Business Proposal Styles =================== */
+/* Commented Out Relevant CSS */
+/*
+.custom-size{
+  margin-top: -7px;
+  padding-bottom: 9px;
 }
 
-.circle-chart {
-    width: 100%;
-    max-width: 150px;
-    margin: 0 auto;
-  }
-
-  .circle-chart canvas {
-    margin-left: -10%;
-    width: 120% !important;
-    height: auto !important;
-  }
-
-  @media (max-width: 640px) {
-    .text-2xl {
-      font-size: 1.5rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .p-5 {
-      padding: 1rem;
-    }
-  }
-
-#totalClients {
-    border: none; /* Ensure there's no border */
-    background-color: transparent; /* Optional: Make sure there's no background */
+.w-40 {
+  margin-top: -40px;
+  margin-left: -30px;
+  width: 10rem;
 }
+*/
 
-.custom-center {
-    display: flex;
-    justify-content: center;
-    align-items: end;
+/* =================== Customer Section Styles =================== */
+/* Commented Out Relevant CSS */
+/*
+#weekClients {
+  border: none !important; 
+  background-color: transparent !important;
 }
 
 .apexcharts-datalabel-label,
 .apexcharts-text,
 .apexcharts-legend-text,
 .apexcharts-pie-label {
-    color: white !important;
+  color: white !important;
 }
+*/
 
-.custom_size{
- margin-top: -3px;
-
-}
-
-
-
-.custom-size{
-    margin-top: -7px;
-    padding-bottom: 9px;
-    
-}
-
-.w-40 {
-    margin-top: -40px;
-    margin-left: -30px;
-    width: 10rem;
-}
-
-.text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-    margin-top: -15px;
-}
-#weekClients {
-    border: none !important; /* Remove any border */
-    background-color: transparent !important; /* Ensure no background color */
-}
-
-.remove_border{
-    border: none !important;
-    border:0 px !important;
-}
 /* Custom styling for the modal */
 #searchModal .modal-content {
-  max-width: 500px;
-  margin: auto;
+max-width: 500px;
+margin: auto;
 }
 
 #searchModal .flex-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
 }
 
 #searchModal .flex-wrap div {
-  flex: 1 1 45%; /* Adjust the width of each checkbox container */
+flex: 1 1 45%; /* Adjust the width of each checkbox container */
 }
 
 #searchModal label {
-  margin-left: 5px;
-  color: black;
+margin-left: 5px;
+color: black;
 }
-
 
 /* Set default text color to black for the modal */
 #advancedSearchModal * {
-  color: black !important; /* Ensure all text inside the modal is black */
+color: black !important; /* Ensure all text inside the modal is black */
 }
 
 /* Advanced Search Styles */
 #searchResults {
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
+max-height: 300px;
+overflow-y: auto;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+background-color: #fff;
 }
 
 .result-item {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+border: 1px solid #ddd;
+border-radius: 5px;
+margin-bottom: 10px;
+padding: 10px;
+background-color: #f9f9f9;
+box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .result-item h4 {
-  margin: 0 0 5px;
-  font-size: 16px;
-  font-weight: bold;
+margin: 0 0 5px;
+font-size: 16px;
+font-weight: bold;
 }
 
 .result-item p {
-  margin: 2px 0;
-  font-size: 14px;
-  color: #555;
+margin: 2px 0;
+font-size: 14px;
+color: #555;
 }
 
 #advancedSearchModal {
-  animation: fadeIn 0.5s ease-in-out;
+animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from {
-      opacity: 0;
-  }
-  to {
-      opacity: 1;
-  }
+from {
+    opacity: 0;
+}
+to {
+    opacity: 1;
+}
 }
 
 
+/* Hide Qualified Lead, Business Proposal, and Customer in Sidebar */
+#nav-qualified-lead,
+#nav-business-proposal,
+#nav-customer {
+    display: none; /* Hides the elements */
+    pointer-events: none; /* Disables click events */
+    visibility: hidden; /* Ensures it's invisible */
+}
 
+/* Optional: Prevent additional space left by hidden items */
+nav ul li {
+    margin: 0; /* Ensures no extra space */
+    padding: 0; /* Aligns structure properly */
+}
+
+/* Table Styling */
+table {
+  width: 100%; /* Full table width */
+  border-collapse: collapse; /* Removes space between cells */
+  table-layout: fixed; /* Ensures fixed column width */
+  border: 1px solid #444; /* Adds border around the entire table */
+}
+
+/* Table Header (th) Styling */
+/* Table Header (th) Styling */
+th {
+  text-align: center; /* Center-align text */
+  vertical-align: middle; /* Vertically center content */
+  padding: 12px; /* Consistent padding */
+  font-weight: bold; /* Bold text */
+  background-color: #1f2937; /* Solid dark background for headers */
+  color: #ffffff; /* White text */
+  border: 1px solid #444; /* Add border to each header cell */
+}
+
+
+/* Table Data (td) Styling */
+/* Table Data (td) Styling */
+td {
+  text-align: center; /* Center-align text horizontally */
+  vertical-align: middle; /* Center-align content vertically */
+  padding: 12px; /* Adds spacing between table data */
+  color: #e0e0e0; /* Light gray text */
+  border: 1px solid #444; /* Add border to each table cell */
+  word-wrap: break-word; /* Prevents overflow */
+}
+
+
+/* Set specific column widths */
+th:nth-child(1), td:nth-child(1) { width: 5%; }  /* Sl No */
+th:nth-child(2), td:nth-child(2) { width: 10%; } /* Photos */
+th:nth-child(3), td:nth-child(3) { width: 15%; } /* Name */
+th:nth-child(4), td:nth-child(4) { width: 10%; } /* Date */
+th:nth-child(5), td:nth-child(5) { width: 20%; } /* Company Name */
+th:nth-child(6), td:nth-child(6) { width: 15%; } /* Phone */
+th:nth-child(7), td:nth-child(7) { width: 25%; } /* Email */
+
+/* Uniform Row Height */
+tbody tr {
+  height: 50px; /* Ensures uniform row height */
+}
+
+/* Add table border outline */
+table {
+  border: 1px solid #444; /* Darker border for table outline */
+}
+
+/* Responsive Table for Smaller Screens */
+@media (max-width: 768px) {
+  th, td {
+    padding: 8px; /* Reduce padding */
+    font-size: 12px; /* Smaller font for mobile */
+  }
+}
+
+/* !!!!!!!!!!!!!!!!!!!!!!!! */
+/* to make any kind of  changes to the table appearance access the below code for modifications */
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+/* Table container styling */
+table {
+  border-collapse: separate; /* Prevent content collapsing */
+  border-spacing: 0;         /* Remove spacing between cells */
+  border: none;              /* Remove the table border */
+  outline: none;             /* Remove the outer outline, if any */
+  width: 100%;               /* Maintain table structure */
+}
+
+/* Table header and data cells */
+table th, table td {
+  border: none;              /* Remove any default borders */
+  padding: 12px;             /* Consistent spacing */
+  text-align: center;        /* Center-align content */
+  vertical-align: middle;    /* Vertically align content */
+  background-color: transparent; /* Ensure no background issues */
+}
+
+/* Hide the outer container border */
+table {
+  box-shadow: none;          /* Remove any box shadows */
+}
+
+/* Optional: Remove any border on the table container */
+.table-container {
+  border: none;              /* Ensure parent container has no border */
+  outline: none;
+}
