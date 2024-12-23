@@ -142,12 +142,43 @@ document.addEventListener('DOMContentLoaded', () => {
 </select>
 
           </td>
-         
+         <td class="py-2 px-4">
+    <button onclick="generateAndDownloadQRCode('${client._id}')" class="bg-blue-500 px-2 py-1 rounded">Download QR</button>
+</td>
         </tr>
         `;
         tableBody.insertAdjacentHTML('beforeend', row);
     });
 }
+
+// Download QR Code Feature 
+window.generateAndDownloadQRCode = async function (clientId) {
+  try {
+      const pageUrl = `https://www.erp.posspole.com/visitor.html`;
+      const qrData = `${pageUrl}?client_id=${clientId}`;
+
+      // Generate the QR code data URL
+      const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
+          errorCorrectionLevel: 'M',
+          width: 300,
+          margin: 2,
+      });
+
+      // Create a download link for the QR code
+      const link = document.createElement('a');
+      link.href = qrCodeDataUrl;
+      link.download = `${clientId}-qrcode.png`;
+
+      // Trigger the download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      console.log(`QR Code generated and downloaded for client ID: ${clientId}`);
+  } catch (error) {
+      console.error('Error generating QR code:', error);
+  }
+};
 
 
 // dropdown change

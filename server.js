@@ -252,8 +252,8 @@ async function generateAndSendQRCode(client, isSyndicateClient = false) {
   try {
       // Determine the URL based on whether the client is a syndicate client
       const pageUrl = isSyndicateClient 
-          ? `https://www.posspole.line.pm/syndicate_client_side_visitorform.html`
-          : `https://www.posspole.line.pm/visitor.html`;
+          ? `https://www.erp.posspole.com/syndicate_client_side_visitorform.html`
+          : `https://www.erp.posspole.com/visitor.html`;
 
       // Use the unique client ID to create the QR code URL
       const qrData = `${pageUrl}?client_id=${client._id}`;
