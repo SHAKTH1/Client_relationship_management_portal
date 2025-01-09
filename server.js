@@ -1895,6 +1895,12 @@ app.get('/api/mom/attachment/:attachmentId', async (req, res) => {
 
 
 
+
+
+
+
+// priority status dropdown api
+
 router.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { priority } = req.body;
@@ -1923,7 +1929,42 @@ router.put('/api/syndicateclients/:id/priority', authenticateToken, async (req, 
   }
 });
 
-// Set client status
+
+
+
+// priority comments api
+
+router.put('/api/syndicateclients/:id/priority-comments', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { priority_comments } = req.body;
+
+  if (!priority_comments) {
+    return res.status(400).json({ message: 'Priority comments are required.' });
+  }
+
+  try {
+    const updatedClient = await Client.findByIdAndUpdate(
+      id,
+      { priority_comments },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedClient) {
+      return res.status(404).json({ message: 'Client not found.' });
+    }
+
+    res.status(200).json({ message: 'Priority comments updated successfully.', client: updatedClient });
+  } catch (error) {
+    console.error('Error updating priority comments:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+
+
+
+
+// Set client status api
 app.put('/api/syndicateclients/:id/status', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { client_status } = req.body;
@@ -1949,6 +1990,44 @@ app.put('/api/syndicateclients/:id/status', authenticateToken, async (req, res) 
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+
+
+
+// client comments api
+
+router.put('/api/syndicateclients/:id/client-comments', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { client_comments } = req.body;
+
+  if (!client_comments) {
+    return res.status(400).json({ message: 'Client comments are required.' });
+  }
+
+  try {
+    const updatedClient = await Client.findByIdAndUpdate(
+      id,
+      { client_comments },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedClient) {
+      return res.status(404).json({ message: 'Client not found.' });
+    }
+
+    res.status(200).json({ message: 'Client comments updated successfully.', client: updatedClient });
+  } catch (error) {
+    console.error('Error updating client comments:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+
+
+
+
+
 
 
 // visitor pass apis

@@ -203,6 +203,7 @@ window.handleDropdownChange = function(clientId, selectedValue) {
 
 // Open a modal and fetch the appropriate "Last Updated" value
 // Open a modal and populate dropdown and comments
+// Open a modal and populate dropdown and comments
 window.openModal = async function (modalId, clientId) {
   const modal = document.getElementById(modalId);
   if (!modal) {
@@ -211,9 +212,16 @@ window.openModal = async function (modalId, clientId) {
   }
 
   try {
-    // Fetch the client details from the backend
+    // Fetch the token
     const token = localStorage.getItem('syndicateToken');
-    const response = await fetch(`/api/syndicateclient/${clientId}`, {
+    if (!token) {
+      console.warn('No authentication token found in localStorage.');
+      alert('You are not logged in or your session has expired. Please log in again.');
+      return;
+    }
+
+    // Fetch the client details from the backend
+    const response = await fetch(`http://localhost:5001/api/syndicateclient/${clientId}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -233,7 +241,6 @@ window.openModal = async function (modalId, clientId) {
     if (lastUpdatedElement) {
       let lastUpdatedValue = 'Not Set';
 
-      // Set the value based on the modal type
       if (modalId === 'set-priority-modal') {
         lastUpdatedValue = clientData.priority || 'Not Set';
       } else if (modalId === 'set-client-status-modal') {
@@ -253,11 +260,14 @@ window.openModal = async function (modalId, clientId) {
       }
     }
 
-    // Populate comments with existing data from localStorage (or backend later)
+    // Populate comments from the backend
     const commentsBox = modal.querySelector('textarea');
     if (commentsBox) {
-      const savedComments = localStorage.getItem(`comments-${modalId}-${clientId}`) || '';
-      commentsBox.value = savedComments;
+      if (modalId === 'set-priority-modal') {
+        commentsBox.value = clientData.priority_comments || '';
+      } else if (modalId === 'set-client-status-modal') {
+        commentsBox.value = clientData.client_comments || '';
+      }
     }
 
     // Set clientId to the modal for further use
@@ -268,17 +278,6 @@ window.openModal = async function (modalId, clientId) {
   } catch (error) {
     console.error('Error fetching client details:', error);
     alert('Failed to fetch client details. Please try again.');
-  }
-};
-
-// Close a modal
-window.closeModal = function (modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.style.display = 'none';
-    console.log(`Modal "${modalId}" closed.`);
-  } else {
-    console.error(`Modal with ID "${modalId}" not found.`);
   }
 };
 
@@ -301,10 +300,8 @@ window.savePriority = async function () {
   }
 
   try {
-    console.log('Sending priority update to the backend:', { clientId, priority });
-
-    // Send the updated priority to the backend
-    const response = await fetch(`/api/syndicateclients/${clientId}/priority`, {
+    // Update priority
+    const priorityResponse = await fetch(`/api/syndicateclients/${clientId}/priority`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -313,18 +310,27 @@ window.savePriority = async function () {
       body: JSON.stringify({ priority }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Failed to update priority: ${errorData.message || response.statusText}`);
+    if (!priorityResponse.ok) {
+      const errorData = await priorityResponse.json();
+      throw new Error(`Failed to update priority: ${errorData.message}`);
     }
 
-    const data = await response.json();
-    console.log(`Priority updated successfully in the backend:`, data);
+    // Update priority comments
+    const commentsResponse = await fetch(`/api/syndicateclients/${clientId}/priority-comments`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ priority_comments: comments }),
+    });
 
-    alert(`Priority updated to "${priority}" successfully.`);
+    if (!commentsResponse.ok) {
+      const errorData = await commentsResponse.json();
+      throw new Error(`Failed to update comments: ${errorData.message}`);
+    }
 
-    // Save comments to localStorage
-    localStorage.setItem(`comments-set-priority-modal-${clientId}`, comments);
+    alert(`Priority and comments updated successfully.`);
 
     // Optionally refresh the client list after updating
     fetchSyndicateClients(token);
@@ -332,12 +338,12 @@ window.savePriority = async function () {
     // Close the modal after success
     window.closeModal('set-priority-modal');
   } catch (error) {
-    console.error('Error updating priority:', error);
-    alert('Failed to update priority. Please try again.');
+    console.error('Error updating priority or comments:', error);
+    alert('Failed to update priority or comments. Please try again.');
   }
 };
 
-// Save Client Status and comments
+// Save client status and comments
 window.saveClientStatus = async function () {
   const modal = document.getElementById('set-client-status-modal');
   if (!modal) {
@@ -356,10 +362,8 @@ window.saveClientStatus = async function () {
   }
 
   try {
-    console.log('Sending client status update to the backend:', { clientId, status });
-
-    // Send the updated status to the backend
-    const response = await fetch(`/api/syndicateclients/${clientId}/status`, {
+    // Update client status
+    const statusResponse = await fetch(`/api/syndicateclients/${clientId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -368,18 +372,27 @@ window.saveClientStatus = async function () {
       body: JSON.stringify({ client_status: status }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Failed to update client status: ${errorData.message || response.statusText}`);
+    if (!statusResponse.ok) {
+      const errorData = await statusResponse.json();
+      throw new Error(`Failed to update client status: ${errorData.message}`);
     }
 
-    const data = await response.json();
-    console.log(`Client Status updated successfully in the backend:`, data);
+    // Update client comments
+    const commentsResponse = await fetch(`/api/syndicateclients/${clientId}/client-comments`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ client_comments: comments }),
+    });
 
-    alert(`Client Status updated to "${status}" successfully.`);
+    if (!commentsResponse.ok) {
+      const errorData = await commentsResponse.json();
+      throw new Error(`Failed to update comments: ${errorData.message}`);
+    }
 
-    // Save comments to localStorage
-    localStorage.setItem(`comments-set-client-status-modal-${clientId}`, comments);
+    alert(`Client status and comments updated successfully.`);
 
     // Optionally refresh the client list after updating
     fetchSyndicateClients(token);
@@ -387,10 +400,23 @@ window.saveClientStatus = async function () {
     // Close the modal after success
     window.closeModal('set-client-status-modal');
   } catch (error) {
-    console.error('Error updating client status:', error);
-    alert('Failed to update client status. Please try again.');
+    console.error('Error updating client status or comments:', error);
+    alert('Failed to update client status or comments. Please try again.');
   }
 };
+
+// Close the modal
+window.closeModal = function (modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'none';
+    console.log(`Modal "${modalId}" closed.`);
+  } else {
+    console.error(`Modal with ID "${modalId}" not found.`);
+  }
+};
+
+
 
   function renderPagination() {
     const paginationContainer = document.getElementById('pagination');

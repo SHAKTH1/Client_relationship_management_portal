@@ -20,7 +20,9 @@ const clientSchema = new mongoose.Schema({
   businessProposal: { type: mongoose.Schema.Types.ObjectId, ref: 'BusinessProposal' },
   // Syndicate-specific fields
   syndicate_name: { type: String }, // This comes from the syndicate clients
-  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' } // Priority field from syndicate client schema
+  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' }, // Priority field from syndicate client schema
+  priority_comments: { type: String, default: '' }, // Comments for priority modal
+  client_comments: { type: String, default: '' },  // Comments for client status modal
 }, { timestamps: true });
 
 module.exports = mongoose.model('Client', clientSchema);
